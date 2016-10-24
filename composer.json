@@ -1,0 +1,32 @@
+{
+    "name": "moesif/moesif-laravel",
+    "type": "library",
+    "description": "Collection/Data Ingestion SDK for Laravel",
+    "keywords": ["Moesif API","Moesif Laravel","Laravel","API","SDK"],
+    "homepage": "https://moesif.com",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "derric@moesif.com",
+            "email": "derric@moesif.com",
+            "homepage": "https://moesif.com/developer-documentation",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "mashape/unirest-php": "~3.0.1",
+        "apimatic/jsonmapper": "~1.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.*"
+    },
+        "autoload": {
+        "psr-4": {
+            "MoesifLaravel\\": "src/"
+        }
+    }
+}
