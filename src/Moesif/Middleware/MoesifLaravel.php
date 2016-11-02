@@ -31,10 +31,10 @@ class MoesifLaravel
         $startDateTime = new DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
         $startDateTime->setTimezone(new DateTimeZone("UTC"));
 
-        Log::info('start time: '. $startDateTime->format('Y-m-d\TH:i:s.uP'));
-
         $response = $next($request);
 
+        // after response.
+        
         $applicationId = config('moesif.applicationId');
         $apiVersion = config('moesif.apiVersion');
         $maskRequestHeaders = config('moesif.maskRequestHeaders');
