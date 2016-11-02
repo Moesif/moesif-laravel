@@ -43,6 +43,15 @@ class MoesifLaravel
         $maskResponseBody = config('moesif.maskResponseBody');
         $identifyUserId = config('moesif.identifyUserId');
         $identifySessionId = config('moesif.identifySessionId');
+        $debug = config('moesif.debug');
+        $fork = config('moesif.fork');
+
+        if (is_null($fork)) {
+            $fork = true;
+        }
+        if (is_null($debug)) {
+            $debug = false;
+        }
 
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
@@ -52,9 +61,12 @@ class MoesifLaravel
             'time' => $startDateTime->format('Y-m-d\TH:i:s.uP'),
             'verb' => $request->method(),
             'uri' => $request->fullUrl(),
-            'ip_address' => $request->ip(),
-            'api_version' => $apiVersion
+            'ip_address' => $request->ip()
         ];
+
+        if (!is_null($apiVersion)) {
+            $requestData['api_version'] = $apiVersion;
+        }
 
         $requestHeaders = [];
         foreach($request->headers->keys() as $key) {
@@ -137,7 +149,7 @@ class MoesifLaravel
             $data['session_token'] = 'none';
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>true]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$fork, 'debug'=>$debug]);
 
         $moesifApi->track($data);
 

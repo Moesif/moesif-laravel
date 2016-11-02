@@ -84,5 +84,7 @@ return [
     'identifyUserId' => $identifyUserId,
     'identifySessionId' => $identifySessionId,
     'apiVersion' => '1.2.2',
+    'debug' => true,
+    'fork' => true,
     'addTags' => $addTags
 ];

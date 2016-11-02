@@ -24,7 +24,7 @@ How To Setup:
 
 'providers' => [
     //
-    MoesifLaravel\Moesif\Middleware\MoesifLaravelServiceProvider::class,
+    Moesif\Middleware\MoesifLaravelServiceProvider::class,
 ];
 ```
 
@@ -34,9 +34,11 @@ If your entire website app are API's, you can just add to the core api.
 
 ```php
 
+// within App/Http/Kernel.php
+
 protected $middleware = [
     //
-    MoesifLaravel\Moesif\Middleware\MoesifLaravel::class,
+    \Moesif\Middleware\MoesifLaravel::class,
 ];
 
 ```
@@ -44,11 +46,13 @@ protected $middleware = [
 If you have an API route group, feel free to add to a route group like this:
 
 ```php
+// within App/Http/Kernel.php
+
 protected $middlewareGroups = [
     //
     'api' => [
         //
-        MoesifLaravel\Moesif\Middleware\MoesifLaravel::class,
+        \Moesif\Middleware\MoesifLaravel::class,
     ],
 ];
 ```
@@ -60,7 +64,7 @@ to use route specific middleware setup also.
 ### Publish the package config file
 
 ```bash
-$ php artisan vendor:publish --provider="MoesifLaravel\Moesif\Middleware\MoesifLaravelServiceProvider"
+$ php artisan vendor:publish --provider="Moesif\Middleware\MoesifLaravelServiceProvider"
 ```
 
 ### Setup config
@@ -68,6 +72,9 @@ $ php artisan vendor:publish --provider="MoesifLaravel\Moesif\Middleware\MoesifL
 Edit `config/moesif.php` file.
 
 ```php
+
+// within config/moesif.php
+
 return [
     //
     'applicationId' => 'YOUR APPLICATION ID',
@@ -80,8 +87,7 @@ For other configuration options, see below.
 
 ## Configuration options
 
-You can defined these configuration options in the `config/moesif.php` file. Some of these configuration options are expected to be
-functions.
+You can defined these configuration options in the `config/moesif.php` file. Some of these configuration options are functions.
 
 #### applicationId:
 
@@ -94,9 +100,11 @@ Optional, a string. Tags the data with an API version for better data over time.
 #### maskRequestHeaders
 
 Optional, a function that takes a $headers, which is an associative array, and
-returns an associative array with any information removed.
+returns an associative array with your sensitive headers removed/masked.
 
 ```php
+// within config/moesif.php
+
 $maskRequestHeaders = function($headers) {
     $headers['password'] = '****';
     return $headers;
@@ -114,6 +122,9 @@ Optional, a function that takes a $body, which is an associative array represent
 returns an associative array with any information removed.
 
 ```php
+
+// within config/moesif.php
+
 $maskRequestBody = function($body) {
     // remove any sensitive information.
     return $body;
@@ -138,6 +149,9 @@ Optional, same as above, but for Responses.
 Optional, a function that takes a $request and $response and return a string for userId. This is in case your Laravel implementation uses non standard way of injecting user into $request. We try to obtain userId via $request->user()['id']
 
 ```php
+
+// within config/moesif.php
+
 $identifyUserId = function($request, $response) {
     // $user = $request->user();
     // return $user['id'];
@@ -156,6 +170,13 @@ return [
 #### identifySessionId
 
 Optional, a function that takes a $request and $response and return a string for sessionId.
+
+#### debug
+
+Optional, a boolean if true, will print debug messages using Illuminate\Support\Facades\Log;
+
+#### fork
+Optional, default true, if true will use a forked process to send the data over to moesif.
 
 Credits
 ========
