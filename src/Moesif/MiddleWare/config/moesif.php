@@ -19,7 +19,6 @@ $maskRequestBody = function($body) {
     return $body;
 };
 
-
 /**
  * mask request headers by removing fields
  *
@@ -66,7 +65,6 @@ $identifySessionId = function($request, $response) {
         return null;
     }
 };
-
 
 /**
  * If you want to add any other tags to this event. Please comma separate them,

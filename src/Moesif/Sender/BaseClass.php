@@ -1,5 +1,5 @@
 <?php
-namespace Moesif\MoesifSender;
+namespace Moesif\Sender;
 
 use Illuminate\Support\Facades\Log;
 
