@@ -1,52 +1,168 @@
-MoesifApi
+Moesif Laravel Middlware
 =================
 
-How To Configure:
-=================
-The generated code might need to be configured with your API credentials. To do that,
-open the file "Configuration.php" and edit it's contents.
+This provides a Middleware for PHP Laravel (> 5.1) to send data to Moesif.
 
-How To Build:
+How To Install:
+=================
+
+Via Composer
+
+```bash
+$ composer require moesif/moesif-laravel
+```
+or add 'moesif/moesif-laravel' to your composer.json file accordingly.
+
+How To Setup:
 =============
-The generated code has dependencies over external libraries. These dependencies
-are defined in the `composer.json` file. To resolve these dependencies, we use
-the *Composer* package manager. You will need internet access for this.
 
-1. If you have not already installed Composer, [install the latest version](https://getcomposer.org/download/).
-2. Once Composer is installed, from commandline, run `composer install`
-    to install dependencies.
+### Add Service Provider
 
-How To Use:
-===========
-For using this SDK do the following:
+```php
 
-1. Use Composer to install the dependencies. See the section "How To Build".
-2. See that you have configured your SDK correctly. See the section "How To Configure".
-3. Depending on your project setup, you might need to include composer's autoloader
-   in your PHP code to enable autoloading of classes.
+// within config/app.php
 
-   ```PHP
-   require_once "vendor/autoload.php";
-   ```
-4. Import the SDK client in your project:
+'providers' => [
+    //
+    MoesifLaravel\Moesif\Middleware\MoesifLaravelServiceProvider::class,
+];
+```
 
-    ```PHP
-    use MoesifApi\MoesifApiClient;
-    ```
-5. Instantiate the client. After this, you can now get the controllers and call the
-    respective methods:
+### Add to Middleware
 
-    ```PHP
-    $client = new MoesifApiClient();
-    $controller = $client->getApi();
-    ```
+If your entire website app are API's, you can just add to the core api.
 
-How To Test:
-============
-Unit tests in this SDK can be run using PHPUnit.
+```php
 
-1. First install the dependencies using composer including the `require-dev` dependencies.
-2. Run `vendor\bin\phpunit --verbose` from commandline to execute tests. If you have
-   installed PHPUnit globally, run tests using `phpunit --verbose` instead.
+protected $middleware = [
+    //
+    MoesifLaravel\Moesif\Middleware\MoesifLaravel::class,
+];
 
-You can change the PHPUnit test configuration in the `phpunit.xml` file.
+```
+
+If you have an API route group, feel free to add to a route group like this:
+
+```php
+protected $middlewareGroups = [
+    //
+    'api' => [
+        //
+        MoesifLaravel\Moesif\Middleware\MoesifLaravel::class,
+    ],
+];
+```
+
+Also, if you have only certain routes that are APIs you want to track, feel free
+to use route specific middleware setup also.
+
+
+### Publish the package config file
+
+```bash
+$ php artisan vendor:publish --provider="MoesifLaravel\Moesif\Middleware\MoesifLaravelServiceProvider"
+```
+
+### Setup config
+
+Edit `config/moesif.php` file.
+
+```php
+return [
+    //
+    'applicationId' => 'YOUR APPLICATION ID',
+];
+```
+
+The applicationId is required, you can obtain the applicationId from the settings for your application on Moesif's website.
+
+For other configuration options, see below.
+
+## Configuration options
+
+You can defined these configuration options in the `config/moesif.php` file. Some of these configuration options are expected to be
+functions.
+
+#### applicationId:
+
+Required, a string that identifies your application.
+
+#### apiVersion:
+
+Optional, a string. Tags the data with an API version for better data over time.
+
+#### maskRequestHeaders
+
+Optional, a function that takes a $headers, which is an associative array, and
+returns an associative array with any information removed.
+
+```php
+$maskRequestHeaders = function($headers) {
+    $headers['password'] = '****';
+    return $headers;
+};
+
+return [
+  //
+  'maskRequestHeaders' => $maskRequestHeaders
+];
+```
+
+#### maskRequestBody
+
+Optional, a function that takes a $body, which is an associative array representation of JSON, and
+returns an associative array with any information removed.
+
+```php
+$maskRequestBody = function($body) {
+    // remove any sensitive information.
+    return $body;
+};
+
+return [
+  //
+  'maskRequestBody' => $maskRequestBody
+];
+```
+
+#### maskResponseHeaders
+
+Optional, same as above, but for Responses.
+
+#### maskResponseBody
+
+Optional, same as above, but for Responses.
+
+#### identifyUserId
+
+Optional, a function that takes a $request and $response and return a string for userId. This is in case your Laravel implementation uses non standard way of injecting user into $request. We try to obtain userId via $request->user()['id']
+
+```php
+$identifyUserId = function($request, $response) {
+    // $user = $request->user();
+    // return $user['id'];
+
+    return 'yourcomputeduserId';
+};
+```
+
+```php
+return [
+  //
+  'identifyUserId' => $identifyUserId
+];
+```
+
+#### identifySessionId
+
+Optional, a function that takes a $request and $response and return a string for sessionId.
+
+Credits
+========
+
+- Queuing & sending the data with a forked process (non blocking) is based on Mixpanel's PHP open source client code.
+
+License
+========
+
+Apache License, Version 2.0. Please see [License File](license.md) for more detail.

@@ -1,8 +1,8 @@
 {
     "name": "moesif/moesif-laravel",
     "type": "library",
-    "description": "Collection/Data Ingestion SDK for Laravel",
-    "keywords": ["Moesif API","Moesif Laravel","Laravel","API","SDK"],
+    "description": "Moesif Collection/Data Ingestion Middleware for Laravel",
+    "keywords": ["Moesif API","Moesif Laravel","Laravel","API","Middleware"],
     "homepage": "https://moesif.com",
     "license": "Apache-2.0",
     "authors": [
