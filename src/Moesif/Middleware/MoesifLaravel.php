@@ -44,11 +44,7 @@ class MoesifLaravel
         $identifyUserId = config('moesif.identifyUserId');
         $identifySessionId = config('moesif.identifySessionId');
         $debug = config('moesif.debug');
-        $fork = config('moesif.fork');
 
-        if (is_null($fork)) {
-            $fork = true;
-        }
         if (is_null($debug)) {
             $debug = false;
         }
@@ -149,7 +145,7 @@ class MoesifLaravel
             $data['session_token'] = 'none';
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$fork, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
 
         $moesifApi->track($data);
 

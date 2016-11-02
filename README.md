@@ -173,10 +173,8 @@ Optional, a function that takes a $request and $response and return a string for
 
 #### debug
 
-Optional, a boolean if true, will print debug messages using Illuminate\Support\Facades\Log;
+Optional, a boolean if true, will print debug messages using Illuminate\Support\Facades\Log
 
-#### fork
-Optional, default true, if true will use a forked process to send the data over to moesif.
 
 Credits
 ========
