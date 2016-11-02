@@ -2,6 +2,8 @@ Moesif Laravel Middlware
 =================
 
 This provides a Middleware for PHP Laravel (> 5.1) to send data to Moesif.
+Please checkout [Moesif Homepage](https://www.moesif.com) for more information regarding Moesif and
+how Moesif makes debugging easier. 
 
 How To Install:
 =================
