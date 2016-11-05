@@ -1,12 +1,15 @@
 Moesif Laravel Middlware
-=================
+========================
 
-This provides a Middleware for PHP Laravel (> 5.1) to send data to Moesif.
-Please checkout [Moesif Homepage](https://www.moesif.com) for more information regarding Moesif and
-how Moesif makes debugging easier. 
+[Source Code on GitHub](https://github.com/moesif/moesif-laravel)
+
+__Check out Moesif's
+[Laravel developer documentation](https://www.moesif.com/developer-documentation) to learn more__
+
+A Middleware for PHP Laravel (> 5.1) automatically captures HTTP traffic with just a few lines of code.
 
 How To Install:
-=================
+===============
 
 Via Composer
 
@@ -32,7 +35,7 @@ How To Setup:
 
 ### Add to Middleware
 
-If your entire website app are API's, you can just add to the core api.
+If website root is your API, add to the root level:
 
 ```php
 
@@ -45,7 +48,7 @@ protected $middleware = [
 
 ```
 
-If you have an API route group, feel free to add to a route group like this:
+If API under specific route group, add to your route group:
 
 ```php
 // within App/Http/Kernel.php
@@ -59,8 +62,7 @@ protected $middlewareGroups = [
 ];
 ```
 
-Also, if you have only certain routes that are APIs you want to track, feel free
-to use route specific middleware setup also.
+To track only certain routes, use route specific middleware setup.
 
 
 ### Publish the package config file
@@ -83,24 +85,51 @@ return [
 ];
 ```
 
-The applicationId is required, you can obtain the applicationId from the settings for your application on Moesif's website.
+The applicationId is required, you can obtain your applicationId by logging onto [www.moesif.com](https://www.moesif.com) underneath settings
 
 For other configuration options, see below.
 
 ## Configuration options
 
-You can defined these configuration options in the `config/moesif.php` file. Some of these configuration options are functions.
+You can define Moesif configuration options in the `config/moesif.php` file. Some of these fields are functions.
 
 #### applicationId:
-
+Type: `String`
 Required, a string that identifies your application.
 
-#### apiVersion:
+#### identifyUserId
+Type: `($request, $response) => String`
+Optional, a function that takes a $request and $response and return a string for userId. Moesif automatically obtains end userId via $request->user()['id'], In case you use a non standard way of injecting user into $request or want to override userId, you can do so with identifyUserId. 
 
-Optional, a string. Tags the data with an API version for better data over time.
+```php
+
+// within config/moesif.php
+
+$identifyUserId = function($request, $response) {
+    // $user = $request->user();
+    // return $user['id'];
+
+    return 'end_user_id';
+};
+```
+
+```php
+return [
+  //
+  'identifyUserId' => $identifyUserId
+];
+```
+
+#### identifySessionId
+Type: `($request, $response) => String`
+Optional, a function that takes a $request and $response and return a string for sessionId. Moesif automatically sessionizes by processing at your data, but you can override this via identifySessionId if you're not happy with the results.
+
+#### apiVersion:
+Type: `String`
+Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
 
 #### maskRequestHeaders
-
+Type: `$headers => $headers`
 Optional, a function that takes a $headers, which is an associative array, and
 returns an associative array with your sensitive headers removed/masked.
 
@@ -119,7 +148,7 @@ return [
 ```
 
 #### maskRequestBody
-
+Type: `$body => $body`
 Optional, a function that takes a $body, which is an associative array representation of JSON, and
 returns an associative array with any information removed.
 
@@ -139,51 +168,23 @@ return [
 ```
 
 #### maskResponseHeaders
-
+Type: `$headers => $headers`
 Optional, same as above, but for Responses.
 
 #### maskResponseBody
-
+Type: `$body => $body`
 Optional, same as above, but for Responses.
 
-#### identifyUserId
-
-Optional, a function that takes a $request and $response and return a string for userId. This is in case your Laravel implementation uses non standard way of injecting user into $request. We try to obtain userId via $request->user()['id']
-
-```php
-
-// within config/moesif.php
-
-$identifyUserId = function($request, $response) {
-    // $user = $request->user();
-    // return $user['id'];
-
-    return 'yourcomputeduserId';
-};
-```
-
-```php
-return [
-  //
-  'identifyUserId' => $identifyUserId
-];
-```
-
-#### identifySessionId
-
-Optional, a function that takes a $request and $response and return a string for sessionId.
-
 #### debug
-
-Optional, a boolean if true, will print debug messages using Illuminate\Support\Facades\Log
-
+Type: `Boolean`
+Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
 
 Credits
-========
+=======
 
-- Queuing & sending the data with a forked process (non blocking) is based on Mixpanel's PHP open source client code.
+- Parts of queuing & sending data via forked non-blocking process is based on Mixpanel's PHP client code which is open sourced under Apache License, Version 2.0.
 
 License
-========
+=======
 
-Apache License, Version 2.0. Please see [License File](license.md) for more detail.
+Apache License, Version 2.0. Please see [License File](LICENSE) for more details.
