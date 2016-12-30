@@ -4,7 +4,7 @@ Moesif Laravel Middlware
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
 __Check out Moesif's
-[Laravel developer documentation](https://www.moesif.com/developer-documentation) to learn more__
+[PHP developer documentation](https://www.moesif.com/developer-documentation/?php) to learn more__
 
 A Middleware for PHP Laravel (> 5.1) automatically captures HTTP traffic with just a few lines of code.
 
@@ -99,7 +99,7 @@ Required, a string that identifies your application.
 
 #### identifyUserId
 Type: `($request, $response) => String`
-Optional, a function that takes a $request and $response and return a string for userId. Moesif automatically obtains end userId via $request->user()['id'], In case you use a non standard way of injecting user into $request or want to override userId, you can do so with identifyUserId. 
+Optional, a function that takes a $request and $response and return a string for userId. Moesif automatically obtains end userId via $request->user()['id'], In case you use a non standard way of injecting user into $request or want to override userId, you can do so with identifyUserId.
 
 ```php
 
