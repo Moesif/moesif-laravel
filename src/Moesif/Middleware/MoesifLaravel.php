@@ -34,7 +34,7 @@ class MoesifLaravel
         $response = $next($request);
 
         // after response.
-        
+
         $applicationId = config('moesif.applicationId');
         $apiVersion = config('moesif.apiVersion');
         $maskRequestHeaders = config('moesif.maskRequestHeaders');
@@ -83,7 +83,15 @@ class MoesifLaravel
             if (!is_null($maskRequestBody)) {
                 $requestData['body'] = $maskRequestBody($requestBody);
             } else {
-                $requestData['body'] = $requestBody;
+                // can't be parsed.
+                $requestData['body'] = [
+                    'moesif_error' => [
+                        'code' => 'json_parse_error',
+                        'src' => 'moesif-laravel',
+                        'msg' => ['Body is not a JSON Object or JSON Array'],
+                        'args' => [$request->getContent()]
+                    ]
+                ];
             }
         } else {
             //Log::info('request body is not json');
@@ -110,7 +118,15 @@ class MoesifLaravel
         } else {
             // that means that json can't be parsed.
             // so send the entire string for error analysis.
-            $responseData['body'] = $response->content();
+            $responseData['body'] = [
+                'moesif_error' => [
+                    'code' => 'json_parse_error',
+                    'src' => 'moesif-laravel',
+                    'msg' => ['Body is not a JSON Object or JSON Array'],
+                    'args' => [$response->content()]
+                ]
+            ];
+            // $response->content();
         }
 
         $responseHeaders = [];
