@@ -2,9 +2,6 @@
 
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
-__Check out Moesif's
-[PHP developer documentation](https://www.moesif.com/developer-documentation/?php) to learn more__
-
 A Middleware for PHP Laravel (> 5.1) automatically captures HTTP traffic with just a few lines of code.
 
 ## How To Install
@@ -179,3 +176,12 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 ## Credits for Moesif Laravel SDK
 
 - Parts of queuing & sending data via forked non-blocking process is based on Mixpanel's PHP client code which is open sourced under Apache License, Version 2.0.
+
+## Moesif PHP Library
+
+If you are using PHP but not Laravel, you can use Moesif PHP library instead. 
+
+__Check out Moesif's
+[PHP developer documentation](https://www.moesif.com/developer-documentation/?php) to learn more__
+
+
