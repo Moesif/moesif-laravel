@@ -177,11 +177,7 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 
 - Parts of queuing & sending data via forked non-blocking process is based on Mixpanel's PHP client code which is open sourced under Apache License, Version 2.0.
 
-## Moesif PHP Library
+## Other Integrations
 
-If you are using PHP but not Laravel, you can use Moesif PHP library instead. 
-
-__Check out Moesif's
-[PHP developer documentation](https://www.moesif.com/developer-documentation/?php) to learn more__
-
+To view more more documenation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__ 
 
