@@ -4,7 +4,7 @@
 
 [package on phppackages.org](https://phppackages.org/s/moesif%20laravel)
 
-A Middleware for PHP Laravel (> 5.1) to automatically capture HTTP traffic.
+A Middleware for PHP Laravel (> 5.1) to automatically capture _incoming_ HTTP traffic.
 
 ## How to install
 
@@ -116,15 +116,15 @@ return [
 ];
 ```
 
-#### identifySessionId
+#### __`identifySessionId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for sessionId. Moesif automatically sessionizes by processing at your data, but you can override this via identifySessionId if you're not happy with the results.
 
-#### apiVersion
+#### __`apiVersion`__
 Type: `String`
 Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
 
-#### maskRequestHeaders
+#### __`maskRequestHeaders`__
 Type: `$headers => $headers`
 Optional, a function that takes a $headers, which is an associative array, and
 returns an associative array with your sensitive headers removed/masked.
@@ -143,7 +143,7 @@ return [
 ];
 ```
 
-#### maskRequestBody
+#### __`maskRequestBody`__
 Type: `$body => $body`
 Optional, a function that takes a $body, which is an associative array representation of JSON, and
 returns an associative array with any information removed.
@@ -163,15 +163,15 @@ return [
 ];
 ```
 
-#### maskResponseHeaders
+#### __`maskResponseHeaders`__
 Type: `$headers => $headers`
 Optional, same as above, but for Responses.
 
-#### maskResponseBody
+#### __`maskResponseBody`__
 Type: `$body => $body`
 Optional, same as above, but for Responses.
 
-#### debug
+#### __`debug`__
 Type: `Boolean`
 Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
 
@@ -179,6 +179,6 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 
 - Parts of queuing & sending data via forked non-blocking process is based on Mixpanel's PHP client code which is open sourced under Apache License, Version 2.0.
 
-## Other Integrations
+## Other integrations
 
 To view more more documentation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__
