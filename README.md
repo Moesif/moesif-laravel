@@ -2,9 +2,11 @@
 
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
-A Middleware for PHP Laravel (> 5.1) automatically captures HTTP traffic with just a few lines of code.
+[package on phppackages.org](https://phppackages.org/s/moesif%20laravel)
 
-## How To Install
+A Middleware for PHP Laravel (> 5.1) to automatically capture HTTP traffic.
+
+## How to install
 
 Via Composer
 
@@ -13,7 +15,7 @@ $ composer require moesif/moesif-laravel
 ```
 or add 'moesif/moesif-laravel' to your composer.json file accordingly.
 
-## How To Setup
+## How to use
 
 ### Add Service Provider
 
@@ -79,7 +81,7 @@ return [
 ];
 ```
 
-The applicationId is required, you can obtain your applicationId by logging onto [www.moesif.com](https://www.moesif.com) underneath settings
+Your can find your Application Id from [_Moesif Dashboard_](https://www.moesif.com/) -> _Top Right Menu_ -> _App Setup_
 
 For other configuration options, see below.
 
@@ -87,7 +89,7 @@ For other configuration options, see below.
 
 You can define Moesif configuration options in the `config/moesif.php` file. Some of these fields are functions.
 
-#### applicationId:
+#### applicationId
 Type: `String`
 Required, a string that identifies your application.
 
@@ -118,7 +120,7 @@ return [
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for sessionId. Moesif automatically sessionizes by processing at your data, but you can override this via identifySessionId if you're not happy with the results.
 
-#### apiVersion:
+#### apiVersion
 Type: `String`
 Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
 
@@ -179,5 +181,4 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 
 ## Other Integrations
 
-To view more more documenation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__ 
-
+To view more more documentation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__
