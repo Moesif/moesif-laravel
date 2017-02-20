@@ -1,5 +1,5 @@
 <?php
-namespace Moesif\sender;
+namespace Moesif\Sender;
 
 class MoesifApi extends BaseClass {
 
