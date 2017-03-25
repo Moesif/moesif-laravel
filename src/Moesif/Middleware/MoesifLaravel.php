@@ -25,7 +25,6 @@ class MoesifLaravel
     public function handle($request, Closure $next)
     {
         // do action before response
-
         $t = LARAVEL_START;
         $micro = sprintf("%06d",($t - floor($t)) * 1000000);
         $startDateTime = new DateTime( date('Y-m-d H:i:s.'.$micro, $t) );
@@ -83,18 +82,23 @@ class MoesifLaravel
             if (!is_null($maskRequestBody)) {
                 $requestData['body'] = $maskRequestBody($requestBody);
             } else {
-                // can't be parsed.
-                $requestData['body'] = [
-                    'moesif_error' => [
-                        'code' => 'json_parse_error',
-                        'src' => 'moesif-laravel',
-                        'msg' => ['Body is not a JSON Object or JSON Array'],
-                        'args' => [$request->getContent()]
-                    ]
-                ];
+                $requestData['body'] = $requestBody;
             }
         } else {
-            //Log::info('request body is not json');
+            $requestContent = $request->getContent();
+
+            if($debug) {
+              Log::info('request body is not json');
+              Log::info($requestContent);
+            }
+
+            if (!empty($requestContent)) {
+              if ($debug) {
+                Log::info('request body not be empty, base 64 encode');
+              }
+              $requestData['body'] = base64_encode($requestContent);
+              $requestData['transfer_encoding'] = 'base64';
+            }
         }
 
         $endTime = microTime(true);
@@ -107,26 +111,34 @@ class MoesifLaravel
             'status' => $response->status()
         ];
 
-        $jsonBody = json_decode($response->content(), true);
 
-        if(!is_null($jsonBody)) {
-            if (!is_null($maskResponseBody)) {
-                $responseData['body'] = $maskResponseBody($jsonBody);
-            } else {
-                $responseData['body'] = $jsonBody;
-            }
-        } else {
-            // that means that json can't be parsed.
-            // so send the entire string for error analysis.
-            $responseData['body'] = [
-                'moesif_error' => [
-                    'code' => 'json_parse_error',
-                    'src' => 'moesif-laravel',
-                    'msg' => ['Body is not a JSON Object or JSON Array'],
-                    'args' => [$response->content()]
-                ]
-            ];
-            // $response->content();
+        $responseContent = $response->content();
+        if (!is_null($responseContent)) {
+          $jsonBody = json_decode($response->content(), true);
+
+          if(!is_null($jsonBody)) {
+              if (!is_null($maskResponseBody)) {
+                  $responseData['body'] = $maskResponseBody($jsonBody);
+              } else {
+                  $responseData['body'] = $jsonBody;
+              }
+          } else {
+              // that means that json can't be parsed.
+              // so send the entire string for error analysis.
+              // $responseData['body'] = [
+              //     'moesif_error' => [
+              //         'code' => 'json_parse_error',
+              //         'src' => 'moesif-laravel',
+              //         'msg' => ['Body is not a JSON Object or JSON Array'],
+              //         'args' => [$response->content()]
+              //     ]
+              // ];
+              if (!empty($responseContent)) {
+                  $responseData['body'] = base64_encode($responseContent);
+                  $responseData['transfer_encoding'] = 'base64';
+              }
+              // $response->content();
+          }
         }
 
         $responseHeaders = [];

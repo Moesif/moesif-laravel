@@ -1,12 +1,17 @@
 <?php
 
+/*
+This config file is not used. merely serve as an example/template that
+you can put into your config folder of your laravel project.
+*/
+
 /**
  * mask request headers by removing fields
  *
  * @return headers
  */
 $maskRequestHeaders = function($headers) {
-    $headers['header3'] = 'adding rather the removing, but should work the same.';
+    $headers['header3'] = 'adding rather than removing, works the same';
     return $headers;
 };
 
@@ -76,7 +81,7 @@ $addTags = function($request, $response) {
 };
 
 return [
-    'applicationId' => 'eyJhcHAiOiIzNDU6MSIsInZlciI6IjIuMCIsIm9yZyI6Ijg4OjIiLCJpYXQiOjE0NzgwNDQ4MDB9.apaKCV6N8JvJHaedte0fGPuYNM4ss2L4uyX0WinaD2w',
+    'applicationId' => 'your application id',
     'maskRequestHeaders' => $maskRequestHeaders,
     'maksRequestBody' => $maskRequestBody,
     'maskResponseHeaders' => $maskResponseHeaders,
