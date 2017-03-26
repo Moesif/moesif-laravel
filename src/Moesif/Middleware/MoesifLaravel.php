@@ -75,29 +75,23 @@ class MoesifLaravel
             $requestData['headers'] = $requestHeaders;
         }
 
-        if($request->isJson()) {
+        $requestContent = $request->getContent();
+        if(!is_null($requestContent)) {
             // Log::info('request body is json');
-            $requestBody = json_decode($request->getContent(), true);
+            $requestBody = json_decode($requestContent, true);
             // Log::info('' . $requestBody);
-            if (!is_null($maskRequestBody)) {
-                $requestData['body'] = $maskRequestBody($requestBody);
-            } else {
-                $requestData['body'] = $requestBody;
-            }
-        } else {
-            $requestContent = $request->getContent();
-
-            if($debug) {
-              Log::info('request body is not json');
-              Log::info($requestContent);
-            }
-
-            if (!empty($requestContent)) {
+            if (is_null($requestBody)) {
               if ($debug) {
-                Log::info('request body not be empty, base 64 encode');
+                Log::info('request body not be empty and not json, base 64 encode');
               }
               $requestData['body'] = base64_encode($requestContent);
               $requestData['transfer_encoding'] = 'base64';
+            } else {
+                if (!is_null($maskRequestBody)) {
+                    $requestData['body'] = $maskRequestBody($requestBody);
+                } else {
+                    $requestData['body'] = $requestBody;
+                }
             }
         }
 
@@ -169,8 +163,6 @@ class MoesifLaravel
             $data['session_token'] = $identifySessionId($request, $response);
         } else if ($request->hasSession()) {
             $data['session_token'] = $request->session()->getId();
-        } else {
-            $data['session_token'] = 'none';
         }
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
