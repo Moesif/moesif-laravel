@@ -179,6 +179,11 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 
 - Parts of queuing & sending data via forked non-blocking process is based on Mixpanel's PHP client code which is open sourced under Apache License, Version 2.0.
 
+## Additional Tips:
+
+- The forked (i.e. non-blocking way) of sending the event actually exec() a cURL command. The Php exec() command can be successful but the cURL itself may have 401 errors.  So after integration, if you don't see events and data show up in your Moesif Dash. Please turn on debug option, then the cURL command will logged, and you can execute that cURL command and see what are the issues. The most common thing to check is to confirm is the Application ID is set correctly.
+
+
 ## Other integrations
 
 To view more more documentation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__
