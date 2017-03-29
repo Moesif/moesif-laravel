@@ -181,7 +181,7 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 
 ## Additional Tips:
 
-- The forked (i.e. non-blocking way) of sending the event actually exec() a cURL command. The Php exec() command can be successful but the cURL itself may have 401 errors.  So after integration, if you don't see events and data show up in your Moesif Dash. Please turn on debug option, then the cURL command will logged, and you can execute that cURL command and see what are the issues. The most common thing to check is to confirm is the Application ID is set correctly.
+- The forked (i.e. non-blocking way) of sending data is using exec() with a cURL command. The Php exec() command can be successful but the cURL itself may have 401 errors.  So after integration, if you don't see events and data show up in your Moesif Dash. Please turn on debug option, then the cURL command itself will logged. You can execute that cURL command and see what the issues are. The most common thing to check is if the Application ID is set correctly.
 
 
 ## Other integrations
