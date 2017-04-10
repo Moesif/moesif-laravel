@@ -154,15 +154,15 @@ class MoesifLaravel
         $user = $request->user();
 
         if (!is_null($identifyUserId)) {
-            $data['user_id'] = $identifyUserId($request, $response);
+            $data['user_id'] = $this->ensureString($identifyUserId($request, $response));
         } else if (!is_null($user)) {
-            $data['user_id'] = $user['id'];
+            $data['user_id'] = $this->ensureString($user['id']);
         }
 
         if (!is_null($identifySessionId)) {
-            $data['session_token'] = $identifySessionId($request, $response);
+            $data['session_token'] = $this->ensureString($identifySessionId($request, $response));
         } else if ($request->hasSession()) {
-            $data['session_token'] = $request->session()->getId();
+            $data['session_token'] = $this->ensureString($request->session()->getId());
         }
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
@@ -170,5 +170,15 @@ class MoesifLaravel
         $moesifApi->track($data);
 
         return $response;
+    }
+
+    protected function ensureString($item) {
+      if (is_null($item)) {
+        return $item;
+      }
+      if (is_string($item)) {
+        return $item;
+      }
+      return strval($item);
     }
 }
