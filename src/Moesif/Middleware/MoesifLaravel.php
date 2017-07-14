@@ -42,10 +42,21 @@ class MoesifLaravel
         $maskResponseBody = config('moesif.maskResponseBody');
         $identifyUserId = config('moesif.identifyUserId');
         $identifySessionId = config('moesif.identifySessionId');
+        $skip = config('moesif.skip');
         $debug = config('moesif.debug');
 
         if (is_null($debug)) {
             $debug = false;
+        }
+
+        // if skip is defined, invoke skip function.
+        if (!is_null($skip)) {
+          if($skip($request, $response)) {
+            if ($debug) {
+              Log::info('[Moesif] : skip function returned true, so skipping this event.');
+            }
+            return $response;
+          }
         }
 
         if (is_null($applicationId)) {
@@ -82,7 +93,7 @@ class MoesifLaravel
             // Log::info('' . $requestBody);
             if (is_null($requestBody)) {
               if ($debug) {
-                Log::info('request body not be empty and not json, base 64 encode');
+                Log::info('[Moesif] : request body not be empty and not json, base 64 encode');
               }
               $requestData['body'] = base64_encode($requestContent);
               $requestData['transfer_encoding'] = 'base64';

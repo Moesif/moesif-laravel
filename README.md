@@ -171,6 +171,11 @@ Optional, same as above, but for Responses.
 Type: `$body => $body`
 Optional, same as above, but for Responses.
 
+#### __`skip`__
+Type: `($request, $response) => String`
+Optional, a function that takes a $request and $response and returns true if
+this API call should be not be sent to Moesif. 
+
 #### __`debug`__
 Type: `Boolean`
 Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
