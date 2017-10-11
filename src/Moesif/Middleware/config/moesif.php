@@ -59,6 +59,15 @@ $identifyUserId = function($request, $response) {
 };
 
 /**
+ * returns metadata to be added by the events.
+ *
+ * @return mixed
+ */
+$getMetadata = function($request, $response) {
+  return array("foo"=>"laravel example", "boo"=>"custom data");
+};
+
+/**
  * Use this function to find tokenId . If your app differs from standard lararvel for tokenIds.
  *
  * @return string

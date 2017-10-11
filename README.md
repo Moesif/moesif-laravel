@@ -120,6 +120,10 @@ return [
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for sessionId. Moesif automatically sessionizes by processing at your data, but you can override this via identifySessionId if you're not happy with the results.
 
+#### __`getMetadata`__
+Type: `($request, $response) => $metadata`
+Optional, a function that takes a $request and $response and returns $metdata which is an array and/or associative array representation of JSON.
+
 #### __`apiVersion`__
 Type: `String`
 Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
@@ -174,7 +178,7 @@ Optional, same as above, but for Responses.
 #### __`skip`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and returns true if
-this API call should be not be sent to Moesif. 
+this API call should be not be sent to Moesif.
 
 #### __`debug`__
 Type: `Boolean`

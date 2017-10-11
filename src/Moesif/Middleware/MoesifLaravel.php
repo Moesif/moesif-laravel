@@ -42,6 +42,7 @@ class MoesifLaravel
         $maskResponseBody = config('moesif.maskResponseBody');
         $identifyUserId = config('moesif.identifyUserId');
         $identifySessionId = config('moesif.identifySessionId');
+        $getMetadata = config('moesif.getMetadata');
         $skip = config('moesif.skip');
         $debug = config('moesif.debug');
 
@@ -174,6 +175,10 @@ class MoesifLaravel
             $data['session_token'] = $this->ensureString($identifySessionId($request, $response));
         } else if ($request->hasSession()) {
             $data['session_token'] = $this->ensureString($request->session()->getId());
+        }
+
+        if (!is_null($getMetadata)) {
+          $data['metadata'] = $getMetadata($request, $response);
         }
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
