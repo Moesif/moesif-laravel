@@ -121,8 +121,23 @@ Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for sessionId. Moesif automatically sessionizes by processing at your data, but you can override this via identifySessionId if you're not happy with the results.
 
 #### __`getMetadata`__
-Type: `($request, $response) => $metadata`
-Optional, a function that takes a $request and $response and returns $metdata which is an array and/or associative array representation of JSON.
+Type: `($request, $response) => Associative Array`
+Optional, a function that takes a $request and $response and returns $metdata which is an associative array representation of JSON.
+
+```php
+
+// within config/moesif.php
+
+$getMetadata = function($request, $response) {
+  return array("foo"=>"laravel example", "boo"=>"custom data");
+};
+
+return [
+  //
+  'getMetadata' => $getMetadata
+];
+
+```
 
 #### __`apiVersion`__
 Type: `String`
