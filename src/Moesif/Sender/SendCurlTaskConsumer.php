@@ -13,6 +13,12 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
      * @var string the host-relative endpoint to write to (e.g. /engage)
      */
     protected $_endpoint;
+
+    /**
+     * @var string the host-relative endpoint to write to (e.g. /engage)
+     */
+    protected $_users_endpoint;
+
     /**
      * @var int connect_timeout The number of seconds to wait while trying to connect. Default is 5 seconds.
      */
@@ -38,6 +44,7 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         parent::__construct($applicationId, $options);
         $this->_host = $options['host'];
         $this->_endpoint = $options['endpoint'];
+        $this->_users_endpoint = $options['users_endpoint'];
         $this->_connect_timeout = array_key_exists('connect_timeout', $options) ? $options['connect_timeout'] : 5;
         $this->_timeout = array_key_exists('timeout', $options) ? $options['timeout'] : 30;
         $this->_protocol = array_key_exists('use_ssl', $options) && $options['use_ssl'] == true ? "https" : "http";
@@ -77,6 +84,22 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
             return true;
         }
     }
+
+
+    /**
+     * Write to the user endpoint.
+     */
+    public function updateUser($userData) {
+
+      $data = $this->_encode($userData);
+      $url = $this->_protocol . "://" . $this->_host . $this->_users_endpoint;
+      if ($this->_fork) {
+        return $this->_execute_forked($url, $data);
+      } else {
+        return $this->_execute($url, $data);
+      }
+    }
+
     /**
      * Write using the cURL php extension
      * @param $url

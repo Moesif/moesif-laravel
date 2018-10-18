@@ -1,6 +1,8 @@
 <?php
 namespace Moesif\Sender;
 
+use Exception;
+
 class MoesifApi extends BaseClass {
 
     public $_sendProducer;
@@ -48,6 +50,23 @@ class MoesifApi extends BaseClass {
      */
     public function flush($desired_batch_size = 10) {
         $this->_sendProducer->flush($desired_batch_size);
+    }
+
+    /**
+     * Updates Users.
+     * @param userData
+     * @throws Exception
+     */
+    public function updateUser($userData) {
+      if (is_null($userData)) {
+        throw new Exception('Moesif UpdateUser with a null userData object');
+      }
+
+      if (!isset($userData['user_id'])) {
+        throw new Exception('Moesif updateUser requires user_id field to be set');
+      }
+
+      $this->_sendProducer->updateUser($userData);
     }
     /**
      * Empty the events queue
