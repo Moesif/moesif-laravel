@@ -5,6 +5,7 @@ use Closure;
 
 use DateTime;
 use DateTimeZone;
+use Exception;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;

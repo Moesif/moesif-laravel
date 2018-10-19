@@ -199,6 +199,30 @@ this API call should be not be sent to Moesif.
 Type: `Boolean`
 Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
 
+## Convenience method for updateUser
+
+If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUser` method. This is not part of the Middleware, as this is a method you can invoke anytime you have the
+user's profile, such as when the profile is created or updated.
+
+```php
+use Moesif\Sender\MoesifApi;
+
+$moesifApi = MoesifApi::getInstance('your application id',  ['fork'=>true, 'debug'=>true]);
+
+$moesifApi->updateUser([
+  'user_id' => 'joe123',
+  'metadata' => [
+    'name' => 'joe',
+    'email' => 'joe@acme-inc.com',
+    'special_value' => 'abcdefg'
+  ]
+]);
+// the user_id field is required.
+
+```
+
+The `metadata` field can be any custom data you want to set on the user. The `user_id` field is required.
+
 ## Credits for Moesif Laravel SDK
 
 - Parts of queuing & sending data via forked non-blocking process is based on Mixpanel's PHP client code which is open sourced under Apache License, Version 2.0.

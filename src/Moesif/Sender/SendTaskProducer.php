@@ -32,7 +32,7 @@ class SendTaskProducer extends BaseClass {
      * If the queue reaches this size we'll auto-flush to prevent out of memory errors
      * @var int
      */
-    protected $_max_queue_size = 15;
+    protected $_max_queue_size = 5;
     /**
      * Creates a new Send Task Producer, assings Moesif project applicadation Id.
      * @param $token
@@ -133,6 +133,7 @@ class SendTaskProducer extends BaseClass {
             $this->_log("Using consumer: " . $key . " -> " . $Strategy);
         }
         $this->_options['endpoint'] = $this->_getEndpoint();
+        $this->_options['users_endpoint'] = $this->_getUsersEndpoint();
         return new SendCurlTaskConsumer($this->_appId, $this->_options);
         //return new $Strategy($this->_appId, $this->_options);
     }
@@ -169,11 +170,23 @@ class SendTaskProducer extends BaseClass {
         return $this->_consumer->persist($message);
     }
     /**
+     * Given an array of messages, persist it with the instantiated Persistence Strategy
+     * @param $userData
+     * @return mixed
+     */
+    public function updateUser($userData) {
+      return $this->_consumer->updateUser($userData);
+    }
+    /**
      * Return the endpoint that should be used by a consumer that consumes messages produced by this producer.
      * @return string
      */
     public function _getEndpoint() {
         return '/v1/events/batch';
+    }
+
+    public function _getUsersEndpoint() {
+        return '/v1/users';
     }
 
     /**
