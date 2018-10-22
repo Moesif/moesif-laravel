@@ -256,11 +256,11 @@ The `metadata` field can be any custom data you want to set on the user. The `us
 
 To view more more documentation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__
 
-[ico-built-for]: https://img.shields.io/badge/built%20for-laravel-blue.svg?style=flat-square
-[ico-version]: https://img.shields.io/packagist/v/moesif/moesif-laravel.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/moesif/moesif-laravel.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/License-Apache%202.0-green.svg?style=flat-square
-[ico-source]: https://img.shields.io/github/last-commit/badges/shields.svg?style=social
+[ico-built-for]: https://img.shields.io/badge/built%20for-laravel-blue.svg
+[ico-version]: https://img.shields.io/packagist/v/moesif/moesif-laravel.svg
+[ico-downloads]: https://img.shields.io/packagist/dt/moesif/moesif-laravel.svg
+[ico-license]: https://img.shields.io/badge/License-Apache%202.0-green.svg
+[ico-source]: https://img.shields.io/github/last-commit/moesif/moesif-laravel.svg?style=social
 
 [link-built-for]: http://laravel.com
 [link-package]: https://packagist.org/packages/moesif/moesif-laravel
