@@ -3,8 +3,8 @@
 [![Built For Laravel][ico-built-for]][link-built-for]
 [![Latest Version on Packagist][ico-version]][link-package]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Software License][ico-license]](link-license)
-[![Source Code][ico-source]](link-source)
+[![Software License][ico-license]][link-license]
+[![Source Code][ico-source]][link-source]
 
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
