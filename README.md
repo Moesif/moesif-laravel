@@ -1,14 +1,12 @@
 # Moesif Laravel Middlware
 
-
 [![Built For Laravel][ico-built-for]][link-built-for]
-[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Latest Version on Packagist][ico-version]][link-package]
 [![Total Downloads][ico-downloads]][link-downloads]
-[![Software License][ico-license]](LICENSE.md)
+[![Software License][ico-license]](link-license)
+[![Source Code][ico-source]](link-source)
 
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
-
-[package on phppackages.org](https://phppackages.org/s/moesif%20laravel)
 
 Official middleware for PHP Laravel (> 5.1) to automatically capture _incoming_ HTTP traffic.
 
@@ -261,8 +259,11 @@ To view more more documentation on integration options, please visit __[the Inte
 [ico-built-for]: https://img.shields.io/badge/built%20for-laravel-blue.svg?style=flat-square
 [ico-version]: https://img.shields.io/packagist/v/moesif/moesif-laravel.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/moesif/moesif-laravel.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/License-Apache%202.0-green.svg?style=flat-square
+[ico-source]: https://img.shields.io/github/last-commit/badges/shields.svg?style=social
 
 [link-built-for]: http://laravel.com
-[link-packagist]: https://packagist.org/packages/moesif/moesif-laravel
+[link-package]: https://packagist.org/packages/moesif/moesif-laravel
 [link-downloads]: https://packagist.org/packages/moesif/moesif-laravel
+[link-license]: https://raw.githubusercontent.com/Moesif/moesif-laravel/master/LICENSE
+[link-source]: https://github.com/moesif/moesif-laravel
