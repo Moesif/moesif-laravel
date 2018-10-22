@@ -1,10 +1,21 @@
 # Moesif Laravel Middlware
 
+
+[![Built For Laravel][ico-built-for]][link-built-for]
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Total Downloads][ico-downloads]][link-downloads]
+[![Software License][ico-license]](LICENSE.md)
+
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
 [package on phppackages.org](https://phppackages.org/s/moesif%20laravel)
 
-A Middleware for PHP Laravel (> 5.1) to automatically capture _incoming_ HTTP traffic.
+Official middleware for PHP Laravel (> 5.1) to automatically capture _incoming_ HTTP traffic.
+
+### Community SDKs
+- #### Laravel 4.2
+  A [community SDK](https://github.com/jonnypickett/moesif-laravel) is available for Laravel 4.2 by [jonnypickett](https://github.com/jonnypickett/).
+This SDK is community supported and not maintained by Moesif.
 
 ## How to install
 
@@ -21,10 +32,12 @@ or add 'moesif/moesif-laravel' to your composer.json file accordingly.
 
 ```php
 
-// within config/app.php
+// In config/app.php
 
 'providers' => [
-    //
+  /*
+   * Application Service Providers...
+   */
     Moesif\Middleware\MoesifLaravelServiceProvider::class,
 ];
 ```
@@ -35,11 +48,15 @@ If website root is your API, add to the root level:
 
 ```php
 
-// within App/Http/Kernel.php
+// In App/Http/Kernel.php
 
 protected $middleware = [
-    //
-    \Moesif\Middleware\MoesifLaravel::class,
+  /*
+   * The application's global HTTP middleware stack.
+   *
+   * These middleware are run during every request to your application.
+   */
+   \Moesif\Middleware\MoesifLaravel::class,
 ];
 
 ```
@@ -47,11 +64,13 @@ protected $middleware = [
 If API under specific route group, add to your route group:
 
 ```php
-// within App/Http/Kernel.php
+// In App/Http/Kernel.php
 
 protected $middlewareGroups = [
-    //
-    'api' => [
+  /**
+   * The application's API route middleware group.
+   */
+   'api' => [
         //
         \Moesif\Middleware\MoesifLaravel::class,
     ],
@@ -73,7 +92,7 @@ Edit `config/moesif.php` file.
 
 ```php
 
-// within config/moesif.php
+// In config/moesif.php
 
 return [
     //
@@ -99,7 +118,7 @@ Optional, a function that takes a $request and $response and return a string for
 
 ```php
 
-// within config/moesif.php
+// In config/moesif.php
 
 $identifyUserId = function($request, $response) {
     // $user = $request->user();
@@ -126,7 +145,7 @@ Optional, a function that takes a $request and $response and returns $metdata wh
 
 ```php
 
-// within config/moesif.php
+// In config/moesif.php
 
 $getMetadata = function($request, $response) {
   return array("foo"=>"laravel example", "boo"=>"custom data");
@@ -149,7 +168,7 @@ Optional, a function that takes a $headers, which is an associative array, and
 returns an associative array with your sensitive headers removed/masked.
 
 ```php
-// within config/moesif.php
+// In config/moesif.php
 
 $maskRequestHeaders = function($headers) {
     $headers['password'] = '****';
@@ -169,7 +188,7 @@ returns an associative array with any information removed.
 
 ```php
 
-// within config/moesif.php
+// In config/moesif.php
 
 $maskRequestBody = function($body) {
     // remove any sensitive information.
@@ -238,3 +257,12 @@ The `metadata` field can be any custom data you want to set on the user. The `us
 ## Other integrations
 
 To view more more documentation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__
+
+[ico-built-for]: https://img.shields.io/badge/built%20for-laravel-blue.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/moesif/moesif-laravel.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/moesif/moesif-laravel.svg?style=flat-square
+[ico-license]: https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?style=flat-square
+
+[link-built-for]: http://laravel.com
+[link-packagist]: https://packagist.org/packages/moesif/moesif-laravel
+[link-downloads]: https://packagist.org/packages/moesif/moesif-laravel
