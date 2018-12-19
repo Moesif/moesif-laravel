@@ -46,6 +46,17 @@ class MoesifLaravel
         $getMetadata = config('moesif.getMetadata');
         $skip = config('moesif.skip');
         $debug = config('moesif.debug');
+        $sampling_percentage = config('moesif.samplingPercentage');
+
+        if (!is_numeric($sampling_percentage)) {
+            throw new Exception('Sampling Percentage should be a number.');
+        }
+        else {
+            if (is_null($sampling_percentage) || $sampling_percentage > 100) {
+                Log::info("Sampling Percentage is not defined in the config, setting to default- ");
+                $sampling_percentage = 100;
+            }
+        }
 
         if (is_null($debug)) {
             $debug = false;
@@ -184,8 +195,13 @@ class MoesifLaravel
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
 
-        $moesifApi->track($data);
+        $random_percentage = $this->generate_random_percentage();
 
+        if ($sampling_percentage >= $random_percentage) {
+            $moesifApi->track($data);    
+        } else {
+            Log::info("Skipped Event due to sampling percentage: ".(string)$sampling_percentage." and random percentage: ".(string)$random_percentage);
+        }
         return $response;
     }
 
@@ -197,5 +213,10 @@ class MoesifLaravel
         return $item;
       }
       return strval($item);
+    }
+
+    protected function generate_random_percentage() 
+    {
+        return ((float)rand() / (float)getrandmax()) * 100;
     }
 }
