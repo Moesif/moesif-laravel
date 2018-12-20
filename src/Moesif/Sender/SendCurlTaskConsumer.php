@@ -157,7 +157,7 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         if ($this->_debug()) {
             $this->_log("Making forked cURL call to $url");
         }
-        $exec = 'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.1.0" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d \'' . $data . '\' "' . $url . '"';
+        $exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.1.0" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
         if(!$this->_debug()) {
             $exec .= " >/dev/null 2>&1 &";
