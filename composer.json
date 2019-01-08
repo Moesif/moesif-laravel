@@ -2,20 +2,20 @@
     "name": "moesif/moesif-laravel",
     "type": "library",
     "description": "Moesif Collection/Data Ingestion Middleware for Laravel",
-    "keywords": ["Moesif","Log","Debugging","Logging","Laravel","API","Middleware"],
+    "keywords": ["Moesif", "Log","Debugging","Logging","Laravel","API","Middleware"],
     "homepage": "https://moesif.com",
     "license": "Apache-2.0",
     "authors": [
         {
             "name": "derric@moesif.com",
             "email": "derric@moesif.com",
-            "homepage": "https://moesif.com/developer-documentation",
+            "homepage": "https://www.moesif.com",
             "role": "Developer"
         },
         {
             "name": "xing@moesif.com",
             "email": "xing@moesif.com",
-            "homepage": "https://moesif.com/developer-documentation",
+            "homepage": "https://www.moesif.com",
             "role": "Developer"
         }
     ],

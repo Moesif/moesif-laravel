@@ -116,7 +116,7 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         $headers = [
             'Content-Type: application/json',
             'X-Moesif-Application-Id: ' . $this->_appId,
-            'User-Agent: moesif-laravel/1.1.0'
+            'User-Agent: moesif-laravel/1.3.3'
         ];
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -157,7 +157,7 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         if ($this->_debug()) {
             $this->_log("Making forked cURL call to $url");
         }
-        $exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.1.0" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
+        $exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.3.3" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
         if(!$this->_debug()) {
             $exec .= " >/dev/null 2>&1 &";
