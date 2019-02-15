@@ -46,7 +46,7 @@ class MoesifLaravel
         $getMetadata = config('moesif.getMetadata');
         $skip = config('moesif.skip');
         $debug = config('moesif.debug');
-        $sampling_percentage = config('moesif.samplingPercentage');
+        $sampling_percentage = config('moesif.samplingPercentage') ?: 100;
 
         if (!is_numeric($sampling_percentage)) {
             throw new Exception('Sampling Percentage should be a number.');
