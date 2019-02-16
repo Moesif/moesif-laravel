@@ -10,11 +10,9 @@
 
 Official middleware for PHP Laravel (> 5.1) to automatically capture _incoming_ HTTP traffic.
 
-### Community SDKs
-- #### Laravel 4.2
-  A [community SDK](https://github.com/jonnypickett/moesif-laravel) is available for Laravel 4.2 by [jonnypickett](https://github.com/jonnypickett/).
-This SDK is community supported and not maintained by Moesif.
-
+### Laravel 4.2
+  A [Moesif SDK](https://github.com/Moesif/moesif-laravel4.2) is available for Laravel 4.2. Credit for creating this goes to [jonnypickett](https://github.com/jonnypickett/).
+  
 ## How to install
 
 Via Composer
