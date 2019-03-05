@@ -17,6 +17,30 @@ use Moesif\Sender\MoesifApi;
 class MoesifLaravel
 {
     /**
+     * Generate GUID.
+     */
+    function guidv4($data)
+    {
+        assert(strlen($data) == 16);
+    
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+    
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+
+    /**
+     * Function for basic field validation (present and neither empty nor only white space.
+     */
+    function IsNullOrEmptyString($str){
+        $isNullOrEmpty = false;
+        if (!isset($str) || trim($str) === '') {
+            $isNullOrEmpty = true;
+        } 
+        return $isNullOrEmpty;
+    }
+
+    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -46,6 +70,8 @@ class MoesifLaravel
         $getMetadata = config('moesif.getMetadata');
         $skip = config('moesif.skip');
         $debug = config('moesif.debug');
+        $disableTransactionId = config('moesif.disableTransactionId') ?: false;
+        $transactionId = null;
 
         if (is_null($debug)) {
             $debug = false;
@@ -80,6 +106,27 @@ class MoesifLaravel
         foreach($request->headers->keys() as $key) {
             $requestHeaders[$key] = (string) $request->headers->get($key);
         }
+
+        // Add Transaction Id to the request headers
+        if (!$disableTransactionId) {
+            if (!is_null((string) $request->headers->get('X-Moesif-Transaction-Id') ?? null)) {
+                $reqTransId = (string) $request->headers->get('X-Moesif-Transaction-Id');
+                if (!is_null($reqTransId)) {
+                    $transactionId = $reqTransId;
+                }
+                if ($this->IsNullOrEmptyString($transactionId)) {
+                    $transactionId = $this->guidv4(openssl_random_pseudo_bytes(16));
+                }
+            }
+            else {
+                $transactionId = $this->guidv4(openssl_random_pseudo_bytes(16));
+            }
+            // Filter out the old key as HTTP Headers case are not preserved
+            if(array_key_exists('x-moesif-transaction-id', $requestHeaders)) { unset($requestHeaders['x-moesif-transaction-id']); }
+            // Add Transaction Id to the request headers
+            $requestHeaders['X-Moesif-Transaction-Id'] = $transactionId;
+        }
+
         // can't use headers->all() because it is an array of arrays.
         // $request->headers->all();
         if(!is_null($maskRequestHeaders)) {
@@ -153,6 +200,11 @@ class MoesifLaravel
             $responseHeaders[$key] = (string) $response->headers->get($key);
         }
 
+        // Add Transaction Id to the response headers
+        if (!is_null($transactionId)) {
+            $responseHeaders['X-Moesif-Transaction-Id'] = $transactionId;
+        }
+
         if(!is_null($maskResponseHeaders)) {
             $responseData['headers'] = $maskResponseHeaders($responseHeaders);
         } else {
@@ -184,6 +236,11 @@ class MoesifLaravel
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
         
+        // Add transaction Id to the response send to the client
+        if (!is_null($transactionId)) {
+            $response->header('X-Moesif-Transaction-Id', $transactionId);
+        }
+
         $moesifApi->track($data);
         
         return $response;
