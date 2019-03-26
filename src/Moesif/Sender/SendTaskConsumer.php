@@ -61,4 +61,11 @@ abstract class SendTaskConsumer extends BaseClass {
      * @return boolean success or fail.
      */
     abstract function updateUser($userData);
+
+    /**
+     * Update users batch data
+     * @params array $batch an array of userData
+     * @return boolean success or fail.
+     */
+    abstract function updateUsersBatch($usersBatchData);
 }

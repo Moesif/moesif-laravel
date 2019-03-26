@@ -30,6 +30,64 @@ class MoesifLaravel
     }
 
     /**
+     * Get Client Ip Address.
+     */
+    function getIp(){
+        foreach (array('HTTP_X_CLIENT_IP', 'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_TRUE_CLIENT_IP', 
+        'HTTP_X_REAL_IP', 'HTTP_X_REAL_IP',  'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
+            if (array_key_exists($key, $_SERVER) === true){
+                foreach (explode(',', $_SERVER[$key]) as $ip){
+                    $ip = trim($ip); // just to be safe
+                    if (strpos($ip, ':') !== false) {
+                        $ip = array_values(explode(':', $ip))[0];
+                    }
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                        return $ip;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Update user.
+     */
+    public function updateUser($userData){
+        $applicationId = config('moesif.applicationId');
+        $debug = config('moesif.debug');
+        
+        if (is_null($applicationId)) {
+            throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
+        }
+
+        if (is_null($debug)) {
+            $debug = false;
+        }
+
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
+        $moesifApi->updateUser($userData);
+    }
+
+    /**
+     * Update users in batch.
+     */
+    public function updateUsersBatch($userData){
+        $applicationId = config('moesif.applicationId');
+        $debug = config('moesif.debug');
+        
+        if (is_null($applicationId)) {
+            throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
+        }
+
+        if (is_null($debug)) {
+            $debug = false;
+        }
+
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
+        $moesifApi->updateUsersBatch($userData);
+    }
+
+    /**
      * Function for basic field validation (present and neither empty nor only white space.
      */
     function IsNullOrEmptyString($str){
@@ -95,7 +153,7 @@ class MoesifLaravel
             'time' => $startDateTime->format('Y-m-d\TH:i:s.uP'),
             'verb' => $request->method(),
             'uri' => $request->fullUrl(),
-            'ip_address' => $request->ip()
+            'ip_address' => $this->getIp()
         ];
 
         if (!is_null($apiVersion)) {

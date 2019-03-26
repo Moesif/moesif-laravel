@@ -134,6 +134,7 @@ class SendTaskProducer extends BaseClass {
         }
         $this->_options['endpoint'] = $this->_getEndpoint();
         $this->_options['users_endpoint'] = $this->_getUsersEndpoint();
+        $this->_options['users_batch_endpoint'] = $this->_getUsersBatchEndpoint();
         return new SendCurlTaskConsumer($this->_appId, $this->_options);
         //return new $Strategy($this->_appId, $this->_options);
     }
@@ -177,6 +178,16 @@ class SendTaskProducer extends BaseClass {
     public function updateUser($userData) {
       return $this->_consumer->updateUser($userData);
     }
+
+    /**
+     * Given an array of messages, persist it with the instantiated Persistence Strategy
+     * @param $userData
+     * @return mixed
+     */
+    public function updateUsersBatch($usersBatchData) {
+        return $this->_consumer->updateUsersBatch($usersBatchData);
+      }
+
     /**
      * Return the endpoint that should be used by a consumer that consumes messages produced by this producer.
      * @return string
@@ -187,6 +198,10 @@ class SendTaskProducer extends BaseClass {
 
     public function _getUsersEndpoint() {
         return '/v1/users';
+    }
+
+    public function _getUsersBatchEndpoint() {
+        return '/v1/users/batch';
     }
 
     /**
