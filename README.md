@@ -214,24 +214,66 @@ this API call should be not be sent to Moesif.
 Type: `Boolean`
 Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
 
-## Convenience method for updateUser
+## updateUser
 
-If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUser` method. This is not part of the Middleware, as this is a method you can invoke anytime you have the
-user's profile, such as when the profile is created or updated.
+If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUser` method. This method is attached to the moesif middleware object to update the users profile or metadata.
 
 ```php
-use Moesif\Sender\MoesifApi;
+use Moesif\Middleware\MoesifLaravel;
 
-$moesifApi = MoesifApi::getInstance('your application id',  ['fork'=>true, 'debug'=>true]);
+$user = array(
+        "user_id" => "phpapiuser",
+        "metadata" => array(
+            "email" => "johndoe@acmeinc.com",
+            "string_field" => "value_1",
+            "number_field" => 0,
+            "object_field" => array(
+                "field_a" => "value_a",
+                "field_b" => "value_b"
+            )
+        ),
+    );
+$middleware = new MoesifLaravel();
+$middleware->updateUser($user);
+// the user_id field is required.
 
-$moesifApi->updateUser([
-  'user_id' => 'joe123',
-  'metadata' => [
-    'name' => 'joe',
-    'email' => 'joe@acme-inc.com',
-    'special_value' => 'abcdefg'
-  ]
-]);
+```
+
+The `metadata` field can be any custom data you want to set on the user. The `user_id` field is required.
+
+## updateUsersBatch
+
+If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUsersBatch` method. This method is attached to the moesif middleware object to update the users profile or metadata in batch.
+
+```php
+use Moesif\Middleware\MoesifLaravel;
+
+$metadata = array(
+            "email" => "johndoe@acmeinc.com",
+            "string_field" => "value_1",
+            "number_field" => 0,
+            "object_field" => array(
+                "field_a" => "value_a",
+                "field_b" => "value_b"
+              )
+            );
+
+$userA = array(
+    "user_id" => "phpapiuser",
+    "metadata" => $metadata,
+);
+
+$userB = array(
+    "user_id" => "phpapiuser1",
+    "metadata" => $metadata,
+);
+
+$users = array();
+$users[] = $userA;
+$users[] = $userB;
+
+$middleware = new MoesifLaravel();
+$middleware->updateUsersBatch($users);
 // the user_id field is required.
 
 ```
