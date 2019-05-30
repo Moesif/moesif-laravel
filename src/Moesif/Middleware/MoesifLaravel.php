@@ -71,7 +71,7 @@ class MoesifLaravel
     /**
      * Update users in batch.
      */
-    public function updateUsersBatch($userData){
+    public function updateUsersBatch($usersData){
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
         
@@ -84,7 +84,45 @@ class MoesifLaravel
         }
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
-        $moesifApi->updateUsersBatch($userData);
+        $moesifApi->updateUsersBatch($usersData);
+    }
+
+    /**
+     * Update company.
+     */
+    public function updateCompany($companyData){
+        $applicationId = config('moesif.applicationId');
+        $debug = config('moesif.debug');
+        
+        if (is_null($applicationId)) {
+            throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
+        }
+
+        if (is_null($debug)) {
+            $debug = false;
+        }
+
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
+        $moesifApi->updateCompany($companyData);
+    }
+
+    /**
+     * Update companies in batch.
+     */
+    public function updateCompaniesBatch($companiesData){
+        $applicationId = config('moesif.applicationId');
+        $debug = config('moesif.debug');
+        
+        if (is_null($applicationId)) {
+            throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
+        }
+
+        if (is_null($debug)) {
+            $debug = false;
+        }
+
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>true, 'debug'=>$debug]);
+        $moesifApi->updateCompaniesBatch($companiesData);
     }
 
     /**

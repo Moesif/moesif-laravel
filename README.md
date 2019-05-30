@@ -216,7 +216,7 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 
 ## updateUser
 
-If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUser` method. This method is attached to the moesif middleware object to update the users profile or metadata.
+If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUser` method. This method is attached to the moesif middleware object to update the user profile or metadata.
 
 ```php
 use Moesif\Middleware\MoesifLaravel;
@@ -280,6 +280,71 @@ $middleware->updateUsersBatch($users);
 
 The `metadata` field can be any custom data you want to set on the user. The `user_id` field is required.
 
+## updateCompany
+
+If you are updating the [company profile](https://www.moesif.com/docs/getting-started/companies/) to get visibility. You can use the `updateCompany` method. This method is attached to the moesif middleware object to update the company profile or metadata.
+
+```php
+use Moesif\Middleware\MoesifLaravel;
+
+$company = array(
+        "company_id" => "phpapicompany",
+        "metadata" => array(
+            "email" => "johndoe@acmeinc.com",
+            "string_field" => "value_1",
+            "number_field" => 0,
+            "object_field" => array(
+                "field_a" => "value_a",
+                "field_b" => "value_b"
+            )
+        ),
+    );
+$middleware = new MoesifLaravel();
+$middleware->updateCompany($company);
+// the company_id field is required.
+
+```
+
+The `metadata` field can be any custom data you want to set on the company. The `company_id` field is required.
+
+## updateCompaniesBatch
+
+If you are updating the [company profile](https://www.moesif.com/docs/getting-started/companies/) to get visibility. You can use the `updateCompaniesBatch` method. This method is attached to the moesif middleware object to update the companies profile or metadata in batch.
+
+```php
+use Moesif\Middleware\MoesifLaravel;
+
+$metadata = array(
+            "email" => "johndoe@acmeinc.com",
+            "string_field" => "value_1",
+            "number_field" => 0,
+            "object_field" => array(
+                "field_a" => "value_a",
+                "field_b" => "value_b"
+              )
+            );
+
+$companyA = array(
+    "company_id" => "phpapicompany",
+    "metadata" => $metadata,
+);
+
+$companyB = array(
+    "company_id" => "phpapicompany1",
+    "metadata" => $metadata,
+);
+
+$companies = array();
+$companies[] = $companyA;
+$companies[] = $companyB;
+
+$middleware = new MoesifLaravel();
+$middleware->updateCompaniesBatch($companies);
+// the user_id field is required.
+
+```
+The `metadata` field can be any custom data you want to set on the company. The `company_id` field is required.
+
 ## Credits for Moesif Laravel SDK
 
 - Parts of queuing & sending data via forked non-blocking process is based on Mixpanel's PHP client code which is open sourced under Apache License, Version 2.0.
@@ -298,7 +363,7 @@ The `metadata` field can be any custom data you want to set on the user. The `us
 
 ## Other integrations
 
-To view more more documentation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__
+To view more documentation on integration options, please visit __[the Integration Options Documentation](https://www.moesif.com/docs/getting-started/integration-options/).__
 
 [ico-built-for]: https://img.shields.io/badge/built%20for-laravel-blue.svg
 [ico-version]: https://img.shields.io/packagist/v/moesif/moesif-laravel.svg

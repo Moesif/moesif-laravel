@@ -135,6 +135,8 @@ class SendTaskProducer extends BaseClass {
         $this->_options['endpoint'] = $this->_getEndpoint();
         $this->_options['users_endpoint'] = $this->_getUsersEndpoint();
         $this->_options['users_batch_endpoint'] = $this->_getUsersBatchEndpoint();
+        $this->_options['company_endpoint'] = $this->_getCompanyEndpoint();
+        $this->_options['companies_batch_endpoint'] = $this->_getCompaniesBatchEndpoint();
         return new SendCurlTaskConsumer($this->_appId, $this->_options);
         //return new $Strategy($this->_appId, $this->_options);
     }
@@ -181,12 +183,30 @@ class SendTaskProducer extends BaseClass {
 
     /**
      * Given an array of messages, persist it with the instantiated Persistence Strategy
-     * @param $userData
+     * @param $usersBatchData
      * @return mixed
      */
     public function updateUsersBatch($usersBatchData) {
         return $this->_consumer->updateUsersBatch($usersBatchData);
       }
+
+     /**
+     * Given an array of messages, persist it with the instantiated Persistence Strategy
+     * @param $companyData
+     * @return mixed
+     */
+    public function updateCompany($companyData) {
+        return $this->_consumer->updateCompany($companyData);
+      }
+  
+      /**
+       * Given an array of messages, persist it with the instantiated Persistence Strategy
+       * @param $companiesBatchData
+       * @return mixed
+       */
+      public function updateCompaniesBatch($companiesBatchData) {
+          return $this->_consumer->updateCompaniesBatch($companiesBatchData);
+        }
 
     /**
      * Return the endpoint that should be used by a consumer that consumes messages produced by this producer.
@@ -202,6 +222,14 @@ class SendTaskProducer extends BaseClass {
 
     public function _getUsersBatchEndpoint() {
         return '/v1/users/batch';
+    }
+
+    public function _getCompanyEndpoint() {
+        return '/v1/companies';
+    }
+
+    public function _getCompaniesBatchEndpoint() {
+        return '/v1/companies/batch';
     }
 
     /**

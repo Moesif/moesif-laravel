@@ -92,6 +92,45 @@ class MoesifApi extends BaseClass {
       }
 
     /**
+     * Updates Company.
+     * @param companyData
+     * @throws Exception
+     */
+    public function updateCompany($companyData) {
+      if (is_null($companyData)) {
+        throw new Exception('Moesif UpdateCompany with a null companyData object');
+      }
+
+      if (!isset($companyData['company_id'])) {
+        throw new Exception('Moesif updateCompany requires company_id field to be set');
+      }
+
+      $this->_sendProducer->updateCompany($companyData);
+    }
+
+    /**
+     * Updates Companies in batch.
+     * @param array of companiesData
+     * @throws Exception
+     */
+    public function updateCompaniesBatch($companiesBatchData = array()) {
+        $companies = array();
+
+        foreach($companiesBatchData as $companyData) {
+            if (is_null($companyData)) {
+                throw new Exception('Moesif UpdateCompany with a null companyData object');
+              }
+        
+              if (!isset($companyData['company_id'])) {
+                throw new Exception('Moesif updateCompany requires company_id field to be set');
+              }
+              $companies[] = $companyData;
+        }
+  
+        $this->_sendProducer->updateCompaniesBatch($companies);
+      }
+
+    /**
      * Empty the events queue
      */
     public function reset() {
