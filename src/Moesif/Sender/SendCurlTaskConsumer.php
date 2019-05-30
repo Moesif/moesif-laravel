@@ -46,6 +46,8 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         $this->_endpoint = $options['endpoint'];
         $this->_users_endpoint = $options['users_endpoint'];
         $this->_users_batch_endpoint = $options['users_batch_endpoint'];
+        $this->_company_endpoint = $options['company_endpoint'];
+        $this->_companies_batch_endpoint = $options['companies_batch_endpoint'];
         $this->_connect_timeout = array_key_exists('connect_timeout', $options) ? $options['connect_timeout'] : 5;
         $this->_timeout = array_key_exists('timeout', $options) ? $options['timeout'] : 30;
         $this->_protocol = array_key_exists('use_ssl', $options) && $options['use_ssl'] == true ? "https" : "http";
@@ -114,6 +116,34 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
           return $this->_execute($url, $data);
         }
       }
+
+    /**
+     * Write to the company endpoint.
+     */
+    public function updateCompany($companyData) {
+
+        $data = $this->_encode($companyData);
+        $url = $this->_protocol . "://" . $this->_host . $this->_company_endpoint;
+        if ($this->_fork) {
+          return $this->_execute_forked($url, $data);
+        } else {
+          return $this->_execute($url, $data);
+        }
+      }
+  
+      /**
+       * Write to the companies batch endpoint.
+       */
+      public function updateCompaniesBatch($companiesBatchData) {
+  
+          $data = $this->_encode($companiesBatchData);
+          $url = $this->_protocol . "://" . $this->_host . $this->_companies_batch_endpoint;
+          if ($this->_fork) {
+            return $this->_execute_forked($url, $data);
+          } else {
+            return $this->_execute($url, $data);
+          }
+        }
 
     /**
      * Write using the cURL php extension
