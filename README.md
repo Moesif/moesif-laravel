@@ -131,6 +131,26 @@ return [
 ];
 ```
 
+#### identifyCompanyId
+Type: `($request, $response) => String`
+Optional, a function that takes a $request and $response and return a string for companyId.
+
+```php
+
+// In config/moesif.php
+
+$identifyCompanyId = function($request, $response) {
+    return '12345';
+};
+```
+
+```php
+return [
+  //
+  'identifyCompanyId' => $identifyCompanyId
+];
+```
+
 #### __`identifySessionId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for sessionId. Moesif automatically sessionizes by processing at your data, but you can override this via identifySessionId if you're not happy with the results.

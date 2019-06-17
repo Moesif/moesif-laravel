@@ -59,6 +59,16 @@ $identifyUserId = function($request, $response) {
 };
 
 /**
+ * Use this function to set companyId.
+ *
+ * @return string
+ */
+
+$identifyCompanyId = function($request, $response) {
+    return "12345";
+};
+
+/**
  * returns metadata to be added by the events.
  *
  * @return mixed

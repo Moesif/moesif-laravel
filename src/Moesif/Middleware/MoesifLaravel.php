@@ -162,6 +162,7 @@ class MoesifLaravel
         $maskResponseHeaders = config('moesif.maskResponseHeaders');
         $maskResponseBody = config('moesif.maskResponseBody');
         $identifyUserId = config('moesif.identifyUserId');
+        $identifyCompanyId = config('moesif.identifyCompanyId');
         $identifySessionId = config('moesif.identifySessionId');
         $getMetadata = config('moesif.getMetadata');
         $skip = config('moesif.skip');
@@ -318,6 +319,11 @@ class MoesifLaravel
             $data['user_id'] = $this->ensureString($identifyUserId($request, $response));
         } else if (!is_null($user)) {
             $data['user_id'] = $this->ensureString($user['id']);
+        }
+
+        // CompanyId
+        if(!is_null($identifyCompanyId)) {
+            $data['company_id'] = $this->ensureString($identifyCompanyId($request, $response));
         }
 
         if (!is_null($identifySessionId)) {
