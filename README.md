@@ -309,6 +309,7 @@ use Moesif\Middleware\MoesifLaravel;
 
 $company = array(
         "company_id" => "phpapicompany",
+        "company_domain" => "acmeinc.com",
         "metadata" => array(
             "email" => "johndoe@acmeinc.com",
             "string_field" => "value_1",
@@ -346,11 +347,13 @@ $metadata = array(
 
 $companyA = array(
     "company_id" => "phpapicompany",
+    "company_domain" => "nowhere.com",
     "metadata" => $metadata,
 );
 
 $companyB = array(
     "company_id" => "phpapicompany1",
+    "company_domain" => "acmeinc.com",
     "metadata" => $metadata,
 );
 
