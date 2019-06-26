@@ -93,6 +93,8 @@ Edit `config/moesif.php` file.
 return [
     //
     'applicationId' => 'YOUR APPLICATION ID',
+    'debug' => true,
+    'logBody' => true,
 ];
 ```
 
@@ -236,7 +238,7 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 
 #### __`logBody`__
 Type: `Boolean`
-Optional, If false, will not log request and response body to Moesif.
+Optional, Default true, Set to false to remove logging request and response body to Moesif.
 
 ## updateUser
 
