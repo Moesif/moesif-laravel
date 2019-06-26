@@ -93,7 +93,6 @@ Edit `config/moesif.php` file.
 return [
     //
     'applicationId' => 'YOUR APPLICATION ID',
-    'debug' => true,
     'logBody' => true,
 ];
 ```
