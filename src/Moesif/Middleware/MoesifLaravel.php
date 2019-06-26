@@ -167,11 +167,20 @@ class MoesifLaravel
         $getMetadata = config('moesif.getMetadata');
         $skip = config('moesif.skip');
         $debug = config('moesif.debug');
-        $disableTransactionId = config('moesif.disableTransactionId') ?: false;
+        $disableTransactionId = config('moesif.disableTransactionId');
+        $logBody = config('moesif.logBody');
         $transactionId = null;
 
         if (is_null($debug)) {
             $debug = false;
+        }
+
+        if (is_null($logBody)) {
+            $logBody = true;
+        }
+
+        if (is_null($disableTransactionId)) {
+            $disableTransactionId = false;
         }
 
         // if skip is defined, invoke skip function.
@@ -233,7 +242,7 @@ class MoesifLaravel
         }
 
         $requestContent = $request->getContent();
-        if(!is_null($requestContent)) {
+        if($logBody && !is_null($requestContent)) {
             // Log::info('request body is json');
             $requestBody = json_decode($requestContent, true);
             // Log::info('' . $requestBody);
@@ -264,7 +273,7 @@ class MoesifLaravel
 
 
         $responseContent = $response->content();
-        if (!is_null($responseContent)) {
+        if ($logBody && !is_null($responseContent)) {
           $jsonBody = json_decode($response->content(), true);
 
           if(!is_null($jsonBody)) {

@@ -104,11 +104,11 @@ For other configuration options, see below.
 
 You can define Moesif configuration options in the `config/moesif.php` file. Some of these fields are functions.
 
-#### applicationId
+#### __`applicationId`__
 Type: `String`
 Required, a string that identifies your application.
 
-#### identifyUserId
+#### __`identifyUserId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for userId. Moesif automatically obtains end userId via $request->user()['id'], In case you use a non standard way of injecting user into $request or want to override userId, you can do so with identifyUserId.
 
@@ -131,7 +131,7 @@ return [
 ];
 ```
 
-#### identifyCompanyId
+#### __`identifyCompanyId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for companyId.
 
@@ -233,6 +233,10 @@ this API call should be not be sent to Moesif.
 #### __`debug`__
 Type: `Boolean`
 Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
+
+#### __`logBody`__
+Type: `Boolean`
+Optional, If false, will not log request and response body to Moesif.
 
 ## updateUser
 
