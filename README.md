@@ -8,7 +8,8 @@
 
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
-Official middleware for PHP Laravel (> 5.1) to automatically capture _incoming_ HTTP traffic.
+Middleware for PHP Laravel (> 5.1) to automatically log API Calls and 
+sends to [Moesif](https://www.moesif.com) for API analytics and log analysis
 
 ### Laravel 4.2
   A [Moesif SDK](https://github.com/Moesif/moesif-laravel4.2) is available for Laravel 4.2. Credit for creating this goes to [jonnypickett](https://github.com/jonnypickett/).
@@ -92,12 +93,17 @@ Edit `config/moesif.php` file.
 
 return [
     //
-    'applicationId' => 'YOUR APPLICATION ID',
+    'applicationId' => 'Your Moesif Application Id',
     'logBody' => true,
 ];
 ```
 
-You can find your Application Id from [_Moesif Dashboard_](https://www.moesif.com/) -> _Top Right Menu_ -> _App Setup_
+Your Moesif Application Id can be found in the [_Moesif Portal_](https://www.moesif.com/).
+After signing up for a Moesif account, your Moesif Application Id will be displayed during the onboarding steps. 
+
+You can always find your Moesif Application Id at any time by logging 
+into the [_Moesif Portal_](https://www.moesif.com/), click on the top right menu,
+and then clicking _Installation_.
 
 For other configuration options, see below.
 
