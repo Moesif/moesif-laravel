@@ -374,7 +374,7 @@ $companies[] = $companyB;
 
 $middleware = new MoesifLaravel();
 $middleware->updateCompaniesBatch($companies);
-// the user_id field is required.
+// the company_id field is required.
 
 ```
 The `metadata` field can be any custom data you want to set on the company. The `company_id` field is required.
