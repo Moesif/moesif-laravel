@@ -253,7 +253,8 @@ If you are updating the [user profile](https://www.moesif.com/docs/getting-start
 use Moesif\Middleware\MoesifLaravel;
 
 $user = array(
-        "user_id" => "phpapiuser",
+        "user_id" => "12345",
+        "company_id" => "67890",
         "metadata" => array(
             "email" => "johndoe@acmeinc.com",
             "string_field" => "value_1",
@@ -290,12 +291,14 @@ $metadata = array(
             );
 
 $userA = array(
-    "user_id" => "phpapiuser",
+    "user_id" => "12345",
+    "company_id" => "67890",
     "metadata" => $metadata,
 );
 
 $userB = array(
-    "user_id" => "phpapiuser1",
+    "user_id" => "1234",
+    "company_id" => "6789",
     "metadata" => $metadata,
 );
 
@@ -319,7 +322,7 @@ If you are updating the [company profile](https://www.moesif.com/docs/getting-st
 use Moesif\Middleware\MoesifLaravel;
 
 $company = array(
-        "company_id" => "phpapicompany",
+        "company_id" => "12345",
         "company_domain" => "acmeinc.com",
         "metadata" => array(
             "email" => "johndoe@acmeinc.com",
@@ -357,13 +360,13 @@ $metadata = array(
             );
 
 $companyA = array(
-    "company_id" => "phpapicompany",
+    "company_id" => "12345",
     "company_domain" => "nowhere.com",
     "metadata" => $metadata,
 );
 
 $companyB = array(
-    "company_id" => "phpapicompany1",
+    "company_id" => "67890",
     "company_domain" => "acmeinc.com",
     "metadata" => $metadata,
 );
