@@ -268,13 +268,13 @@ class MoesifLaravel
 
         $responseData = [
             'time' => $endDateTime->format('Y-m-d\TH:i:s.uP'),
-            'status' => $response->status()
+            'status' => $response->getStatusCode()
         ];
 
 
-        $responseContent = $response->content();
+        $responseContent = $response->getContent();
         if ($logBody && !is_null($responseContent)) {
-          $jsonBody = json_decode($response->content(), true);
+            $jsonBody = json_decode($response->getContent(), true);
 
           if(!is_null($jsonBody)) {
               if (!is_null($maskResponseBody)) {
@@ -282,6 +282,7 @@ class MoesifLaravel
               } else {
                   $responseData['body'] = $jsonBody;
               }
+              $responseData['transfer_encoding'] = 'json';
           } else {
               // that means that json can't be parsed.
               // so send the entire string for error analysis.
@@ -297,7 +298,6 @@ class MoesifLaravel
                   $responseData['body'] = base64_encode($responseContent);
                   $responseData['transfer_encoding'] = 'base64';
               }
-              // $response->content();
           }
         }
 
@@ -349,7 +349,7 @@ class MoesifLaravel
         
         // Add transaction Id to the response send to the client
         if (!is_null($transactionId)) {
-            $response->header('X-Moesif-Transaction-Id', $transactionId);
+            $response->headers->set('X-Moesif-Transaction-Id', $transactionId);
         }
 
         $moesifApi->track($data);
