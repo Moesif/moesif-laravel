@@ -279,11 +279,10 @@ class MoesifLaravel
           if(!is_null($jsonBody)) {
               if (!is_null($maskResponseBody)) {
                   $responseData['body'] = $maskResponseBody($jsonBody);
-                  $responseData['transfer_encoding'] = 'json';
               } else {
                   $responseData['body'] = $jsonBody;
-                  $responseData['transfer_encoding'] = 'json';
               }
+              $responseData['transfer_encoding'] = 'json';
           } else {
               // that means that json can't be parsed.
               // so send the entire string for error analysis.
