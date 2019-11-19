@@ -264,6 +264,10 @@ $user = array(
                 "field_b" => "value_b"
             )
         ),
+        "campaign" => array(
+            "utm_source" => "Newsletter",
+            "utm_medium" => "Email"
+        ),
     );
 $middleware = new MoesifLaravel();
 $middleware->updateUser($user);
@@ -332,6 +336,10 @@ $company = array(
                 "field_a" => "value_a",
                 "field_b" => "value_b"
             )
+        ),
+        "campaign" => array(
+            "utm_source" => "Adwords",
+            "utm_medium" => "Twitter"
         ),
     );
 $middleware = new MoesifLaravel();
