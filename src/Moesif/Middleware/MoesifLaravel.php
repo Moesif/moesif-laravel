@@ -352,6 +352,7 @@ class MoesifLaravel
             $response->headers->set('X-Moesif-Transaction-Id', $transactionId);
         }
 
+        $data['direction'] = "Incoming";
         $moesifApi->track($data);
         
         return $response;
