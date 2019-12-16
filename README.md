@@ -124,10 +124,12 @@ Optional, a function that takes a $request and $response and return a string for
 // In config/moesif.php
 
 $identifyUserId = function($request, $response) {
-    // $user = $request->user();
-    // return $user['id'];
-
-    return 'end_user_id';
+    // Your custom code that returns a user id string
+    $user = $request->user();
+    if ($request->user()) {
+        return $user->id;
+    }
+    return NULL;
 };
 ```
 
@@ -147,7 +149,8 @@ Optional, a function that takes a $request and $response and return a string for
 // In config/moesif.php
 
 $identifyCompanyId = function($request, $response) {
-    return '12345';
+    # Your custom code that returns a company id string
+    return '67890';
 };
 ```
 
@@ -215,6 +218,7 @@ returns an associative array with any information removed.
 
 $maskRequestBody = function($body) {
     // remove any sensitive information.
+    $body['password'] = '****';
     return $body;
 };
 
@@ -245,148 +249,185 @@ Optional, If true, will print debug messages using Illuminate\Support\Facades\Lo
 Type: `Boolean`
 Optional, Default true, Set to false to remove logging request and response body to Moesif.
 
-## updateUser
+## Update a Single User
 
-If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUser` method. This method is attached to the moesif middleware object to update the user profile or metadata.
+Create or update a user profile in Moesif.
+The metadata field can be any customer demographic or other info you want to store.
+Only the `user_id` field is required.
 
 ```php
 use Moesif\Middleware\MoesifLaravel;
 
+// Only userId is required.
+// Campaign object is optional, but useful if you want to track ROI of acquisition channels
+// See https://www.moesif.com/docs/api#users for campaign schema
+// metadata can be any custom object
 $user = array(
-        "user_id" => "12345",
-        "company_id" => "67890",
-        "metadata" => array(
-            "email" => "johndoe@acmeinc.com",
-            "string_field" => "value_1",
-            "number_field" => 0,
-            "object_field" => array(
-                "field_a" => "value_a",
-                "field_b" => "value_b"
-            )
-        ),
-        "campaign" => array(
-            "utm_source" => "Newsletter",
-            "utm_medium" => "Email"
-        ),
-    );
+    "user_id" => "12345",
+    "company_id" => "67890", // If set, associate user with a company object
+    "campaign" => array(
+        "utm_source" => "google",
+        "utm_medium" => "cpc",
+        "utm_campaign" => "adwords",
+        "utm_term" => "api+tooling",
+        "utm_content" => "landing"
+    ),
+    "metadata" => array(
+        "email" => "john@acmeinc.com",
+        "first_name" => "John",
+        "last_name" => "Doe",
+        "title" => "Software Engineer",
+        "sales_info" => array(
+            "stage" => "Customer",
+            "lifetime_value" => 24000,
+            "account_owner" => "mary@contoso.com"
+        )
+    )
+);
+
 $middleware = new MoesifLaravel();
 $middleware->updateUser($user);
-// the user_id field is required.
-
 ```
 
 The `metadata` field can be any custom data you want to set on the user. The `user_id` field is required.
 
-## updateUsersBatch
+## Update Users in Batch
 
-If you are updating the [user profile](https://www.moesif.com/docs/getting-started/users/) to get visibility. You can use the `updateUsersBatch` method. This method is attached to the moesif middleware object to update the users profile or metadata in batch.
+Similar to updateUser, but used to update a list of users in one batch. 
+Only the `user_id` field is required.
 
 ```php
 use Moesif\Middleware\MoesifLaravel;
-
-$metadata = array(
-            "email" => "johndoe@acmeinc.com",
-            "string_field" => "value_1",
-            "number_field" => 0,
-            "object_field" => array(
-                "field_a" => "value_a",
-                "field_b" => "value_b"
-              )
-            );
 
 $userA = array(
     "user_id" => "12345",
-    "company_id" => "67890",
-    "metadata" => $metadata,
+    "company_id" => "67890", // If set, associate user with a company object
+    "campaign" => array(
+        "utm_source" => "google",
+        "utm_medium" => "cpc",
+        "utm_campaign" => "adwords",
+        "utm_term" => "api+tooling",
+        "utm_content" => "landing"
+    ),
+    "metadata" => array(
+        "email" => "john@acmeinc.com",
+        "first_name" => "John",
+        "last_name" => "Doe",
+        "title" => "Software Engineer",
+        "sales_info" => array(
+            "stage" => "Customer",
+            "lifetime_value" => 24000,
+            "account_owner" => "mary@contoso.com"
+        )
+    )
 );
 
 $userB = array(
-    "user_id" => "1234",
-    "company_id" => "6789",
-    "metadata" => $metadata,
+    "user_id" => "12345",
+    "company_id" => "67890", // If set, associate user with a company object
+    "campaign" => array(
+        "utm_source" => "google",
+        "utm_medium" => "cpc",
+        "utm_campaign" => "adwords",
+        "utm_term" => "api+tooling",
+        "utm_content" => "landing"
+    ),
+    "metadata" => array(
+        "email" => "john@acmeinc.com",
+        "first_name" => "John",
+        "last_name" => "Doe",
+        "title" => "Software Engineer",
+        "sales_info" => array(
+            "stage" => "Customer",
+            "lifetime_value" => 24000,
+            "account_owner" => "mary@contoso.com"
+        )
+    )
 );
 
-$users = array();
-$users[] = $userA;
-$users[] = $userB;
+$users = array($userA);
 
 $middleware = new MoesifLaravel();
 $middleware->updateUsersBatch($users);
-// the user_id field is required.
-
 ```
 
 The `metadata` field can be any custom data you want to set on the user. The `user_id` field is required.
 
-## updateCompany
+## Update a Single Company
 
-If you are updating the [company profile](https://www.moesif.com/docs/getting-started/companies/) to get visibility. You can use the `updateCompany` method. This method is attached to the moesif middleware object to update the company profile or metadata.
+Create or update a company profile in Moesif.
+The metadata field can be any company demographic or other info you want to store.
+Only the `company_id` field is required.
 
 ```php
 use Moesif\Middleware\MoesifLaravel;
 
+// Only companyId is required.
+// Campaign object is optional, but useful if you want to track ROI of acquisition channels
+// See https://www.moesif.com/docs/api#update-a-company for campaign schema
+// metadata can be any custom object
 $company = array(
-        "company_id" => "12345",
-        "company_domain" => "acmeinc.com",
-        "metadata" => array(
-            "email" => "johndoe@acmeinc.com",
-            "string_field" => "value_1",
-            "number_field" => 0,
-            "object_field" => array(
-                "field_a" => "value_a",
-                "field_b" => "value_b"
-            )
-        ),
-        "campaign" => array(
-            "utm_source" => "Adwords",
-            "utm_medium" => "Twitter"
-        ),
-    );
+    "company_id" => "67890",
+    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info 
+    "campaign" => array(
+        "utm_source" => "google",
+        "utm_medium" => "cpc",
+        "utm_campaign" => "adwords",
+        "utm_term" => "api+tooling",
+        "utm_content" => "landing"
+    ),
+    "metadata" => array(
+        "org_name" => "Acme, Inc",
+        "plan_name" => "Free",
+        "deal_stage" => "Lead",
+        "mrr" => 24000,
+        "demographics" => array(
+            "alexa_ranking" => 500000,
+            "employee_count" => 47
+        )
+    )
+);
+
 $middleware = new MoesifLaravel();
 $middleware->updateCompany($company);
-// the company_id field is required.
-
 ```
 
 The `metadata` field can be any custom data you want to set on the company. The `company_id` field is required.
 
-## updateCompaniesBatch
+## Update Companies in Batch
 
-If you are updating the [company profile](https://www.moesif.com/docs/getting-started/companies/) to get visibility. You can use the `updateCompaniesBatch` method. This method is attached to the moesif middleware object to update the companies profile or metadata in batch.
+Similar to update_company, but used to update a list of companies in one batch. 
+Only the `company_id` field is required.
 
 ```php
 use Moesif\Middleware\MoesifLaravel;
 
-$metadata = array(
-            "email" => "johndoe@acmeinc.com",
-            "string_field" => "value_1",
-            "number_field" => 0,
-            "object_field" => array(
-                "field_a" => "value_a",
-                "field_b" => "value_b"
-              )
-            );
-
 $companyA = array(
-    "company_id" => "12345",
-    "company_domain" => "nowhere.com",
-    "metadata" => $metadata,
-);
-
-$companyB = array(
     "company_id" => "67890",
-    "company_domain" => "acmeinc.com",
-    "metadata" => $metadata,
+    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info 
+    "campaign" => array(
+        "utm_source" => "google",
+        "utm_medium" => "cpc",
+        "utm_campaign" => "adwords",
+        "utm_term" => "api+tooling",
+        "utm_content" => "landing"
+    ),
+    "metadata" => array(
+        "org_name" => "Acme, Inc",
+        "plan_name" => "Free",
+        "deal_stage" => "Lead",
+        "mrr" => 24000,
+        "demographics" => array(
+            "alexa_ranking" => 500000,
+            "employee_count" => 47
+        )
+    )
 );
 
-$companies = array();
-$companies[] = $companyA;
-$companies[] = $companyB;
+$companies = array($companyA);
 
 $middleware = new MoesifLaravel();
 $middleware->updateCompaniesBatch($companies);
-// the company_id field is required.
-
 ```
 The `metadata` field can be any custom data you want to set on the company. The `company_id` field is required.
 
