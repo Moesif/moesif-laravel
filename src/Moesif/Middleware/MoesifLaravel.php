@@ -353,6 +353,7 @@ class MoesifLaravel
         }
 
         $data['direction'] = "Incoming";
+        $data['weight'] = 1;
         $moesifApi->track($data);
         
         return $response;
