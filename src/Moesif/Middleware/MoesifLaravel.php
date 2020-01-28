@@ -137,6 +137,14 @@ class MoesifLaravel
     }
 
     /**
+     * Function for json validation.
+     */
+    function IsInValidJsonBody($requestBody) {
+        $encoded_data = json_encode($requestBody);
+        return (preg_match("/\\\\{3,}/", $encoded_data));
+    }
+
+    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -246,10 +254,10 @@ class MoesifLaravel
             // Log::info('request body is json');
             $requestBody = json_decode($requestContent, true);
             // Log::info('' . $requestBody);
-            if (is_null($requestBody)) {
-              if ($debug) {
-                Log::info('[Moesif] : request body not be empty and not json, base 64 encode');
-              }
+            if (is_null($requestBody) || $this->IsInValidJsonBody($requestBody) === 1) {
+                if ($debug) {
+                    Log::info('[Moesif] : request body is not empty nor json, base 64 encode');
+                }
               $requestData['body'] = base64_encode($requestContent);
               $requestData['transfer_encoding'] = 'base64';
             } else {
@@ -276,28 +284,19 @@ class MoesifLaravel
         if ($logBody && !is_null($responseContent)) {
             $jsonBody = json_decode($response->getContent(), true);
 
-          if(!is_null($jsonBody)) {
-              if (!is_null($maskResponseBody)) {
-                  $responseData['body'] = $maskResponseBody($jsonBody);
-              } else {
-                  $responseData['body'] = $jsonBody;
-              }
-              $responseData['transfer_encoding'] = 'json';
+          if(is_null($jsonBody) || $this->IsInValidJsonBody($jsonBody) === 1) {
+            if ($debug) {
+                Log::info('[Moesif] : response body is not empty nor json, base 64 encode');
+            }
+            $responseData['body'] = base64_encode($responseContent);
+            $responseData['transfer_encoding'] = 'base64';
           } else {
-              // that means that json can't be parsed.
-              // so send the entire string for error analysis.
-              // $responseData['body'] = [
-              //     'moesif_error' => [
-              //         'code' => 'json_parse_error',
-              //         'src' => 'moesif-laravel',
-              //         'msg' => ['Body is not a JSON Object or JSON Array'],
-              //         'args' => [$response->content()]
-              //     ]
-              // ];
-              if (!empty($responseContent)) {
-                  $responseData['body'] = base64_encode($responseContent);
-                  $responseData['transfer_encoding'] = 'base64';
-              }
+            if (!is_null($maskResponseBody)) {
+                $responseData['body'] = $maskResponseBody($jsonBody);
+            } else {
+                $responseData['body'] = $jsonBody;
+            }
+            $responseData['transfer_encoding'] = 'json';
           }
         }
 
