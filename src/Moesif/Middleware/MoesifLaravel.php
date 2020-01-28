@@ -139,9 +139,9 @@ class MoesifLaravel
     /**
      * Function for json validation.
      */
-    function IsValidJson($requestBody) {
-        $encoded_data = json_encode($requestBody, JSON_HEX_QUOT|JSON_HEX_APOS);
-        return ((strpos($encoded_data, "\u0022") !== false) || (strpos($encoded_data, "\u0027") !== false));
+    function IsInValidJsonBody($requestBody) {
+        $encoded_data = json_encode($requestBody);
+        return (preg_match("/\\\\{3,}/", $encoded_data));
     }
 
     /**
@@ -254,7 +254,7 @@ class MoesifLaravel
             // Log::info('request body is json');
             $requestBody = json_decode($requestContent, true);
             // Log::info('' . $requestBody);
-            if (is_null($requestBody) || $this->IsValidJson($requestBody)) {
+            if (is_null($requestBody) || $this->IsInValidJsonBody($requestBody) === 1) {
                 if ($debug) {
                     Log::info('[Moesif] : request body is not empty nor json, base 64 encode');
                 }
@@ -284,7 +284,7 @@ class MoesifLaravel
         if ($logBody && !is_null($responseContent)) {
             $jsonBody = json_decode($response->getContent(), true);
 
-          if(is_null($jsonBody) || $this->IsValidJson($jsonBody) ) {
+          if(is_null($jsonBody) || $this->IsInValidJsonBody($jsonBody) === 1) {
             if ($debug) {
                 Log::info('[Moesif] : response body is not empty nor json, base 64 encode');
             }
