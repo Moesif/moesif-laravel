@@ -1,8 +1,9 @@
 <?php
 namespace Moesif\Sender;
+use Exception;
 
 if (!function_exists('json_encode')) {
-    throw new Exception('The JSON PHP extension is required.');
+    throw new Exception('The JSON PHP extension is required. See https://stackoverflow.com/questions/7318191/enable-json-encode-in-php');
 }
 /**
  * Provides some base methods for use by a message Producer
