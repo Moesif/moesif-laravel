@@ -1,6 +1,6 @@
 <?php
 namespace Moesif\Sender;
-
+use Exception;
 /**
  * Consumes messages and sends them to a host/endpoint using cURL
  */
@@ -130,12 +130,11 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
           return $this->_execute($url, $data);
         }
       }
-  
+
       /**
        * Write to the companies batch endpoint.
        */
       public function updateCompaniesBatch($companiesBatchData) {
-  
           $data = $this->_encode($companiesBatchData);
           $url = $this->_protocol . "://" . $this->_host . $this->_companies_batch_endpoint;
           if ($this->_fork) {
