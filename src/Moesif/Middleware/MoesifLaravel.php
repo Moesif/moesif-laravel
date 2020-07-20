@@ -62,7 +62,7 @@ class MoesifLaravel
     public function updateUser($userData){
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
-        $isForked = $this->getOrElse(config('moesif.isForked'), true);
+        $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
         
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
@@ -72,7 +72,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$isForked, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
         $moesifApi->updateUser($userData);
     }
 
@@ -82,7 +82,7 @@ class MoesifLaravel
     public function updateUsersBatch($usersData){
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
-        $isForked = $this->getOrElse(config('moesif.isForked'), true);
+        $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
         
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
@@ -92,7 +92,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$isForked, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
         $moesifApi->updateUsersBatch($usersData);
     }
 
@@ -102,7 +102,7 @@ class MoesifLaravel
     public function updateCompany($companyData){
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
-        $isForked = $this->getOrElse(config('moesif.isForked'), true);
+        $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
         
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
@@ -112,7 +112,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$isForked, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
         $moesifApi->updateCompany($companyData);
     }
 
@@ -122,7 +122,7 @@ class MoesifLaravel
     public function updateCompaniesBatch($companiesData){
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
-        $isForked = $this->getOrElse(config('moesif.isForked'), true);
+        $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
         
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
@@ -132,7 +132,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$isForked, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
         $moesifApi->updateCompaniesBatch($companiesData);
     }
 
@@ -188,7 +188,7 @@ class MoesifLaravel
         $debug = config('moesif.debug');
         $disableTransactionId = config('moesif.disableTransactionId');
         $logBody = config('moesif.logBody');
-        $isForked = $this->getOrElse(config('moesif.isForked'), true);
+        $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
         $transactionId = null;
 
         if (is_null($debug)) {
@@ -356,7 +356,7 @@ class MoesifLaravel
           $data['metadata'] = $getMetadata($request, $response);
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$isForked, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>!$disableForking, 'debug'=>$debug]);
         
         // Add transaction Id to the response send to the client
         if (!is_null($transactionId)) {

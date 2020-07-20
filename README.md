@@ -439,7 +439,7 @@ The `metadata` field can be any custom data you want to set on the company. The 
 
 - The forked (i.e. non-blocking way) of sending data is using exec() with a cURL command. The Php exec() command can be successful but the cURL itself may have 401 errors.  So after integration, if you don't see events and data show up in your Moesif Dash. Please turn on debug option, then the cURL command itself will logged. You can execute that cURL command and see what the issues are. The most common thing to check is if the Application ID is set correctly.
 
-In case you've exec() as a disabled function, you could set configuration option `isForked` to `false` to send data to Moesif.
+In case you've exec() as a disabled function, you could set configuration option `disableForking` to `true` to send data to Moesif.
 
 ## Troubleshooting
 
