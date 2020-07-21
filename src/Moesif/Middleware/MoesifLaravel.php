@@ -72,7 +72,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>!$disableForking, 'debug'=>$debug]);
         $moesifApi->updateUser($userData);
     }
 
@@ -92,7 +92,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>!$disableForking, 'debug'=>$debug]);
         $moesifApi->updateUsersBatch($usersData);
     }
 
@@ -112,7 +112,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>!$disableForking, 'debug'=>$debug]);
         $moesifApi->updateCompany($companyData);
     }
 
@@ -132,7 +132,7 @@ class MoesifLaravel
             $debug = false;
         }
 
-        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>$disableForking, 'debug'=>$debug]);
+        $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>!$disableForking, 'debug'=>$debug]);
         $moesifApi->updateCompaniesBatch($companiesData);
     }
 
