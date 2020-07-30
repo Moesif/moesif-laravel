@@ -201,11 +201,20 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         if ($this->_debug()) {
             $this->_log("Making forked cURL call to $url");
         }
-        $exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.4.10" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
+		
+		if(strcasecmp(substr(PHP_OS, 0, 3), 'WIN') == 0) {
+			$exec = ' echo ' . $data . ' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.4.10" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
-        if(!$this->_debug()) {
-            $exec .= " >/dev/null 2>&1 &";
-        }
+			if(!$this->_debug()) {
+				$exec .= " > NUL";
+			}
+		} else {
+			$exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.4.10" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
+
+			if(!$this->_debug()) {
+				$exec .= " >/dev/null 2>&1 &";
+			}
+		}
 
         if ($this->_debug()) {
             $this->_log($exec);
