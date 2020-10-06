@@ -160,7 +160,7 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         $headers = [
             'Content-Type: application/json',
             'X-Moesif-Application-Id: ' . $this->_appId,
-            'User-Agent: moesif-laravel/1.4.10'
+            'User-Agent: moesif-laravel/2.0.0'
         ];
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -201,15 +201,15 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         if ($this->_debug()) {
             $this->_log("Making forked cURL call to $url");
         }
-		
+
 		if(strcasecmp(substr(PHP_OS, 0, 3), 'WIN') == 0) {
-			$exec = ' echo ' . $data . ' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.4.10" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
+			$exec = ' echo ' . $data . ' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/2.0.0" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
 			if(!$this->_debug()) {
 				$exec .= " > NUL";
 			}
 		} else {
-			$exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/1.4.10" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
+			$exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/2.0.0" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
 			if(!$this->_debug()) {
 				$exec .= " >/dev/null 2>&1 &";

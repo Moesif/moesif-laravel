@@ -22,10 +22,10 @@ class MoesifLaravel
     function guidv4($data)
     {
         assert(strlen($data) == 16);
-    
+
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
-    
+
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
@@ -33,7 +33,7 @@ class MoesifLaravel
      * Get Client Ip Address.
      */
     function getIp(){
-        foreach (array('HTTP_X_CLIENT_IP', 'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_TRUE_CLIENT_IP', 
+        foreach (array('HTTP_X_CLIENT_IP', 'HTTP_CF_CONNECTING_IP', 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_TRUE_CLIENT_IP',
         'HTTP_X_REAL_IP', 'HTTP_X_REAL_IP',  'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
             if (array_key_exists($key, $_SERVER) === true){
                 foreach (explode(',', $_SERVER[$key]) as $ip){
@@ -63,7 +63,7 @@ class MoesifLaravel
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
         $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
-        
+
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
         }
@@ -83,7 +83,7 @@ class MoesifLaravel
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
         $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
-        
+
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
         }
@@ -103,7 +103,7 @@ class MoesifLaravel
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
         $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
-        
+
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
         }
@@ -123,7 +123,7 @@ class MoesifLaravel
         $applicationId = config('moesif.applicationId');
         $debug = config('moesif.debug');
         $disableForking = $this->getOrElse(config('moesif.disableForking'), false);
-        
+
         if (is_null($applicationId)) {
             throw new Exception('ApplicationId is missing. Please provide applicationId in moesif.php in config folder.');
         }
@@ -143,7 +143,7 @@ class MoesifLaravel
         $isNullOrEmpty = false;
         if (!isset($str) || trim($str) === '') {
             $isNullOrEmpty = true;
-        } 
+        }
         return $isNullOrEmpty;
     }
 
@@ -176,15 +176,25 @@ class MoesifLaravel
 
         $applicationId = config('moesif.applicationId');
         $apiVersion = config('moesif.apiVersion');
-        $maskRequestHeaders = config('moesif.maskRequestHeaders');
-        $maskRequestBody = config('moesif.maskRequestBody');
-        $maskResponseHeaders = config('moesif.maskResponseHeaders');
-        $maskResponseBody = config('moesif.maskResponseBody');
-        $identifyUserId = config('moesif.identifyUserId');
-        $identifyCompanyId = config('moesif.identifyCompanyId');
-        $identifySessionId = config('moesif.identifySessionId');
-        $getMetadata = config('moesif.getMetadata');
-        $skip = config('moesif.skip');
+
+        $configClass = config('moesif.configClass');
+
+        if ($configClass) {
+           if (!class_exists($configClass)) {
+             throw new Exception('The config class '.$configClass.' not found. Please be sure to specify full name space path.');
+           }
+           $configInstance = new $configClass();
+           $maskRequestHeaders = array($configInstance, 'maskRequestHeaders');
+           $maskRequestBody = array($configInstance, 'maskRequestBody');
+           $maskResponseHeaders = array($configInstance, 'maskResponseHeaders');
+           $maskResponseBody = array($configInstance, 'maskResponseBody');
+           $identifyUserId = array($configInstance, 'identifyUserId');
+           $identifyCompanyId = array($configInstance, 'identifyCompanyId');
+           $identifySessionId = array($configInstance, 'identifySessionId');
+           $getMetadata = array($configInstance, 'getMetadata');
+           $skip = array($configInstance, 'skip');
+        }
+
         $debug = config('moesif.debug');
         $disableTransactionId = config('moesif.disableTransactionId');
         $logBody = config('moesif.logBody');
@@ -357,7 +367,7 @@ class MoesifLaravel
         }
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>!$disableForking, 'debug'=>$debug]);
-        
+
         // Add transaction Id to the response send to the client
         if (!is_null($transactionId)) {
             $response->headers->set('X-Moesif-Transaction-Id', $transactionId);
@@ -366,7 +376,7 @@ class MoesifLaravel
         $data['direction'] = "Incoming";
         $data['weight'] = 1;
         $moesifApi->track($data);
-        
+
         return $response;
     }
 

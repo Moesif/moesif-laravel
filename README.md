@@ -8,12 +8,12 @@
 
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
-Middleware for PHP Laravel (> 5.1) to automatically log API Calls and 
+Middleware for PHP Laravel (> 5.1) to automatically log API Calls and
 sends to [Moesif](https://www.moesif.com) for API analytics and log analysis
 
 ### Laravel 4.2
   A [Moesif SDK](https://github.com/Moesif/moesif-laravel4.2) is available for Laravel 4.2. Credit for creating this goes to [jonnypickett](https://github.com/jonnypickett/).
-  
+
 ## How to install
 
 Via Composer
@@ -99,9 +99,9 @@ return [
 ```
 
 Your Moesif Application Id can be found in the [_Moesif Portal_](https://www.moesif.com/).
-After signing up for a Moesif account, your Moesif Application Id will be displayed during the onboarding steps. 
+After signing up for a Moesif account, your Moesif Application Id will be displayed during the onboarding steps.
 
-You can always find your Moesif Application Id at any time by logging 
+You can always find your Moesif Application Id at any time by logging
 into the [_Moesif Portal_](https://www.moesif.com/), click on the top right menu,
 and then clicking _Installation_.
 
@@ -109,57 +109,54 @@ For other configuration options, see below.
 
 ## Configuration options
 
-You can define Moesif configuration options in the `config/moesif.php` file. Some of these fields are functions.
+__To support Laravel [configuration caching](https://laravel.com/docs/8.x/configuration#configuration-caching), some configuration options have moved into a separate config class for v2. 
+See Migration Guide v1.x.x to v2.x.x__
+
+You can define Moesif configuration options in the `config/moesif.php` file.
 
 #### __`applicationId`__
 Type: `String`
 Required, a string that identifies your application.
 
+#### __`debug`__
+Type: `Boolean`
+Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
+
+#### __`logBody`__
+Type: `Boolean`
+Optional, Default true, Set to false to remove logging request and response body to Moesif.
+
+#### __`apiVersion`__
+Type: `String`
+Optional, a string to specify an API Version such as 1.0.1, allowing easier filters.
+
+### __`configClass`__
+Type: `String`
+Optional, a string for the full path (including namespaces) to a class containing additional functions.
+The class can reside in any namespace, as long as the full namespace is provided.
+
+example:
+
+```php
+return [
+    ...
+    'configClass' => 'MyApp\\MyConfigs\\CustomMoesifConfig',
+    ...
+];
+```
+
+## Configuration class
+
+Because configuration hooks and functions cannot be placed in the `config/moesif.php` file, these reside in a PHP class that you create.
+Set the path to this class using the `configClass` option. You can define any of the following hooks:
+
 #### __`identifyUserId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for userId. Moesif automatically obtains end userId via $request->user()['id'], In case you use a non standard way of injecting user into $request or want to override userId, you can do so with identifyUserId.
 
-```php
-
-// In config/moesif.php
-
-$identifyUserId = function($request, $response) {
-    // Your custom code that returns a user id string
-    $user = $request->user();
-    if ($request->user()) {
-        return $user->id;
-    }
-    return NULL;
-};
-```
-
-```php
-return [
-  //
-  'identifyUserId' => $identifyUserId
-];
-```
-
 #### __`identifyCompanyId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for companyId.
-
-```php
-
-// In config/moesif.php
-
-$identifyCompanyId = function($request, $response) {
-    # Your custom code that returns a company id string
-    return '67890';
-};
-```
-
-```php
-return [
-  //
-  'identifyCompanyId' => $identifyCompanyId
-];
-```
 
 #### __`identifySessionId`__
 Type: `($request, $response) => String`
@@ -169,64 +166,15 @@ Optional, a function that takes a $request and $response and return a string for
 Type: `($request, $response) => Associative Array`
 Optional, a function that takes a $request and $response and returns $metdata which is an associative array representation of JSON.
 
-```php
-
-// In config/moesif.php
-
-$getMetadata = function($request, $response) {
-  return array("foo"=>"laravel example", "boo"=>"custom data");
-};
-
-return [
-  //
-  'getMetadata' => $getMetadata
-];
-
-```
-
-#### __`apiVersion`__
-Type: `String`
-Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
-
 #### __`maskRequestHeaders`__
 Type: `$headers => $headers`
 Optional, a function that takes a $headers, which is an associative array, and
 returns an associative array with your sensitive headers removed/masked.
 
-```php
-// In config/moesif.php
-
-$maskRequestHeaders = function($headers) {
-    $headers['password'] = '****';
-    return $headers;
-};
-
-return [
-  //
-  'maskRequestHeaders' => $maskRequestHeaders
-];
-```
-
 #### __`maskRequestBody`__
 Type: `$body => $body`
 Optional, a function that takes a $body, which is an associative array representation of JSON, and
 returns an associative array with any information removed.
-
-```php
-
-// In config/moesif.php
-
-$maskRequestBody = function($body) {
-    // remove any sensitive information.
-    $body['password'] = '****';
-    return $body;
-};
-
-return [
-  //
-  'maskRequestBody' => $maskRequestBody
-];
-```
 
 #### __`maskResponseHeaders`__
 Type: `$headers => $headers`
@@ -241,13 +189,65 @@ Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and returns true if
 this API call should be not be sent to Moesif.
 
-#### __`debug`__
-Type: `Boolean`
-Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
+Example config class
 
-#### __`logBody`__
-Type: `Boolean`
-Optional, Default true, Set to false to remove logging request and response body to Moesif.
+```php
+namespace MyApp\MyConfigs;
+
+class CustomMoesifConfig
+{
+    public function maskRequestHeaders($headers) {
+      $headers['header5'] = '';
+      return $headers;
+    }
+
+    public function maskRequestBody($body) {
+      return $body;
+    }
+
+    public function maskResponseHeaders($headers) {
+      $headers['header2'] = 'XXXXXX';
+      return $headers;
+    }
+
+    public function maskResponseBody($body) {
+      return $body;
+    }
+
+    public function identifyUserId($request, $response) {
+      if (is_null($request->user())) {
+        return null;
+      } else {
+        $user = $request->user();
+        return $user['id'];
+      }
+    }
+
+    public function identifyCompanyId($request, $response) {
+      return "67890";
+    }
+
+    public function identifySessionId($request, $response) {
+      if ($request->hasSession()) {
+        return $request->session()->getId();
+      } else {
+        return null;
+      }
+    }
+
+    public function getMetadata($request, $response) {
+      return array("foo"=>"a", "boo"=>"b");
+    }
+
+    public function skip($request, $response) {
+      $myurl = $request->fullUrl();
+      if (strpos($myurl, '/health') !== false) {
+        return true;
+      }
+      return false;
+    }
+}
+```
 
 ## Update a Single User
 
@@ -293,7 +293,7 @@ The `metadata` field can be any custom data you want to set on the user. The `us
 
 ## Update Users in Batch
 
-Similar to updateUser, but used to update a list of users in one batch. 
+Similar to updateUser, but used to update a list of users in one batch.
 Only the `user_id` field is required.
 
 ```php
@@ -368,7 +368,7 @@ use Moesif\Middleware\MoesifLaravel;
 // metadata can be any custom object
 $company = array(
     "company_id" => "67890",
-    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info 
+    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info
     "campaign" => array(
         "utm_source" => "google",
         "utm_medium" => "cpc",
@@ -396,7 +396,7 @@ The `metadata` field can be any custom data you want to set on the company. The 
 
 ## Update Companies in Batch
 
-Similar to update_company, but used to update a list of companies in one batch. 
+Similar to update_company, but used to update a list of companies in one batch.
 Only the `company_id` field is required.
 
 ```php
@@ -404,7 +404,7 @@ use Moesif\Middleware\MoesifLaravel;
 
 $companyA = array(
     "company_id" => "67890",
-    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info 
+    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info
     "campaign" => array(
         "utm_source" => "google",
         "utm_medium" => "cpc",
@@ -469,3 +469,62 @@ To view more documentation on integration options, please visit __[the Integrati
 [link-downloads]: https://packagist.org/packages/moesif/moesif-laravel
 [link-license]: https://raw.githubusercontent.com/Moesif/moesif-laravel/master/LICENSE
 [link-source]: https://github.com/moesif/moesif-laravel
+
+## Migration Guide v1.x.x to v2.x.x
+
+v2.x.x now supports Laravel config caching. However, `config:cache` does not allow function closures in config files ([See issue on github](https://github.com/laravel/framework/issues/24103))
+so the SDK configuration has changed in v2.x.x. To migrate, you will need to move any functions from your `config/moesif.php` into a separate class such as CustomMoesifConfig.
+Then, reference this class using `configClass`.
+
+
+For example, if you had these previously:
+
+```php
+$identifyUserId = function($request, $response) {
+    // Your custom code that returns a user id string
+    $user = $request->user();
+    if ($request->user()) {
+        return $user->id;
+    }
+    return NULL;
+};
+
+return [
+  ...,
+  'identifyUserId' => $identifyUserId,
+]
+
+```
+
+In V2.X.X, you would do this:
+
+- Create a new class like this:
+
+```php
+namespace MyApp\MyConfigs;
+
+class CustomMoesifConfig
+{
+    public function identifyUserId($request, $response) {
+      if (is_null($request->user())) {
+        return null;
+      } else {
+        $user = $request->user();
+        return $user['id'];
+      }
+    }
+
+    // add other methods for closure based configs.
+}
+```
+
+- In your `moesif.php` in the config folder:
+
+```php
+
+return [
+  ...,
+  'configClass' => 'MyApp\\MyConfigs\\CustomMoesifConfig',
+]
+
+```
