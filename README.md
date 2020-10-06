@@ -11,8 +11,6 @@
 Middleware for PHP Laravel (> 5.1) to automatically log API Calls and
 sends to [Moesif](https://www.moesif.com) for API analytics and log analysis
 
-__Moesif-Laravel V2.X.X updated to stop using Closure based configs. This is a breaking changes from V1.X.X. Please see migration guide below for instructions for migrating from V1.0 to V2.0__
-
 ### Laravel 4.2
   A [Moesif SDK](https://github.com/Moesif/moesif-laravel4.2) is available for Laravel 4.2. Credit for creating this goes to [jonnypickett](https://github.com/jonnypickett/).
 
@@ -111,7 +109,10 @@ For other configuration options, see below.
 
 ## Configuration options
 
-You can define Moesif configuration options in the `config/moesif.php` file. Some of these fields are functions.
+__To support Laravel [configuration caching](https://laravel.com/docs/8.x/configuration#configuration-caching), some configuration options have moved into a separate config class for v2. 
+See Migration Guide v1.x.x to v2.x.x__
+
+You can define Moesif configuration options in the `config/moesif.php` file.
 
 #### __`applicationId`__
 Type: `String`
@@ -127,94 +128,35 @@ Optional, Default true, Set to false to remove logging request and response body
 
 #### __`apiVersion`__
 Type: `String`
-Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
+Optional, a string to specify an API Version such as 1.0.1, allowing easier filters.
 
 ### __`configClass`__
 Type: `String`
-Optional, a string for the full path (including namespaces) to a class where you can have more function based class.
+Optional, a string for the full path (including namespaces) to a class containing additional functions.
+The class can reside in any namespace, as long as the full namespace is provided.
 
 example:
 
 ```php
 return [
     ...
-    'configClass' => 'Any\\Namespace\\MoesifConfigClass',
+    'configClass' => 'MyApp\\MyConfigs\\CustomMoesifConfig',
     ...
 ];
 ```
 
-Where your class would be something like this. You can decide how to name the namespace, as long
-as full namespace is provided.
+## Configuration class
 
-```php
-namespace Any\Namespace;
-
-class MoesifConfigClass
-{
-    public function maskRequestHeaders($headers) {
-      $headers['header5'] = '';
-      return $headers;
-    }
-
-    public function maskRequestBody($body) {
-      return $body;
-    }
-
-    public function maskResponseHeaders($headers) {
-      $headers['header2'] = 'adding rather the removing, but should work the same.';
-      return $headers;
-    }
-
-    public function maskResponseBody($body) {
-      return $body;
-    }
-
-    public function identifyUserId($request, $response) {
-      if (is_null($request->user())) {
-        return null;
-      } else {
-        $user = $request->user();
-        return $user['id'];
-      }
-    }
-
-    public function identifyCompanyId($request, $response) {
-      return "newCompanyId1234";
-    }
-
-    public function identifySessionId($request, $response) {
-      if ($request->hasSession()) {
-        return $request->session()->getId();
-      } else {
-        return null;
-      }
-    }
-
-    public function getMetadata($request, $response) {
-      return array("foo"=>"laravel example", "boo"=>"custom data here you are here.");
-    }
-
-    public function skip($request, $response) {
-      $myurl = $request->fullUrl();
-      if (strpos($myurl, 'shouldskip') !== false) {
-        return true;
-      }
-      return false;
-    }
-}
-```
-
-The following methods on this class can be specified.
+Because configuration hooks and functions cannot be placed in the `config/moesif.php` file, these reside in a PHP class that you create.
+Set the path to this class using the `configClass` option. You can define any of the following hooks:
 
 #### __`identifyUserId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for userId. Moesif automatically obtains end userId via $request->user()['id'], In case you use a non standard way of injecting user into $request or want to override userId, you can do so with identifyUserId.
 
-
 #### __`identifyCompanyId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for companyId.
-
 
 #### __`identifySessionId`__
 Type: `($request, $response) => String`
@@ -247,6 +189,65 @@ Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and returns true if
 this API call should be not be sent to Moesif.
 
+Example config class
+
+```php
+namespace MyApp\MyConfigs;
+
+class CustomMoesifConfig
+{
+    public function maskRequestHeaders($headers) {
+      $headers['header5'] = '';
+      return $headers;
+    }
+
+    public function maskRequestBody($body) {
+      return $body;
+    }
+
+    public function maskResponseHeaders($headers) {
+      $headers['header2'] = 'XXXXXX';
+      return $headers;
+    }
+
+    public function maskResponseBody($body) {
+      return $body;
+    }
+
+    public function identifyUserId($request, $response) {
+      if (is_null($request->user())) {
+        return null;
+      } else {
+        $user = $request->user();
+        return $user['id'];
+      }
+    }
+
+    public function identifyCompanyId($request, $response) {
+      return "67890";
+    }
+
+    public function identifySessionId($request, $response) {
+      if ($request->hasSession()) {
+        return $request->session()->getId();
+      } else {
+        return null;
+      }
+    }
+
+    public function getMetadata($request, $response) {
+      return array("foo"=>"a", "boo"=>"b");
+    }
+
+    public function skip($request, $response) {
+      $myurl = $request->fullUrl();
+      if (strpos($myurl, '/health') !== false) {
+        return true;
+      }
+      return false;
+    }
+}
+```
 
 ## Update a Single User
 
@@ -469,9 +470,11 @@ To view more documentation on integration options, please visit __[the Integrati
 [link-license]: https://raw.githubusercontent.com/Moesif/moesif-laravel/master/LICENSE
 [link-source]: https://github.com/moesif/moesif-laravel
 
-## Migration Guide from Version 1.X.X
+## Migration Guide v1.x.x to v2.x.x
 
-Because `config:cache` do not allow closures in config files ([See issue on github](https://github.com/laravel/framework/issues/24103)). Therefore, in V2.X.X. we switched to class based configuration. To migrate, if you have closure based config do below:
+v2.x.x now supports Laravel config caching. However, `config:cache` does not allow function closures in config files ([See issue on github](https://github.com/laravel/framework/issues/24103))
+so the SDK configuration has changed in v2.x.x. To migrate, you will need to move any functions from your `config/moesif.php` into a separate class such as CustomMoesifConfig.
+Then, reference this class using `configClass`.
 
 
 For example, if you had these previously:
@@ -493,15 +496,14 @@ return [
 
 ```
 
-In V2.X.X, you would do this.
-
+In V2.X.X, you would do this:
 
 - Create a new class like this:
 
 ```php
-namespace Any\NameSpace;
+namespace MyApp\MyConfigs;
 
-class MoesifConfig
+class CustomMoesifConfig
 {
     public function identifyUserId($request, $response) {
       if (is_null($request->user())) {
@@ -522,7 +524,7 @@ class MoesifConfig
 
 return [
   ...,
-  'configClass' => 'Any\\Namespace\\MoesifConfig',
+  'configClass' => 'MyApp\\MyConfigs\\CustomMoesifConfig',
 ]
 
 ```
