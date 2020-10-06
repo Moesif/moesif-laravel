@@ -138,16 +138,16 @@ example:
 ```php
 return [
     ...
-    'configClass' => 'App\\MyConfigs\\MoesifConfigClass',
+    'configClass' => 'Any\\Namespace\\MoesifConfigClass',
     ...
 ];
 ```
 
-Where your class would be something like this:
-
+Where your class would be something like this. You can decide how to name the namespace, as long
+as full namespace is provided.
 
 ```php
-namespace App\Http\Middleware;
+namespace Any\Namespace;
 
 class MoesifConfigClass
 {
