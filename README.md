@@ -110,7 +110,7 @@ For other configuration options, see below.
 ## Configuration options
 
 __To support Laravel [configuration caching](https://laravel.com/docs/8.x/configuration#configuration-caching), some configuration options have moved into a separate config class for v2. 
-See Migration Guide v1.x.x to v2.x.x__
+See [Migration Guide v1.x.x to v2.x.x](#migration-guide-v1xx-to-v2xx)__
 
 You can define Moesif configuration options in the `config/moesif.php` file.
 
