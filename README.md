@@ -11,6 +11,8 @@
 Middleware for PHP Laravel (> 5.1) to automatically log API Calls and
 sends to [Moesif](https://www.moesif.com) for API analytics and log analysis
 
+__Moesif-Laravel V2.X.X have breaking changes from V1.X.X. Please see migration guide below for instructions for migrating from V1.0 to V2.0__
+
 ### Laravel 4.2
   A [Moesif SDK](https://github.com/Moesif/moesif-laravel4.2) is available for Laravel 4.2. Credit for creating this goes to [jonnypickett](https://github.com/jonnypickett/).
 
@@ -115,51 +117,104 @@ You can define Moesif configuration options in the `config/moesif.php` file. Som
 Type: `String`
 Required, a string that identifies your application.
 
+#### __`debug`__
+Type: `Boolean`
+Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
+
+#### __`logBody`__
+Type: `Boolean`
+Optional, Default true, Set to false to remove logging request and response body to Moesif.
+
+#### __`apiVersion`__
+Type: `String`
+Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
+
+### __`configClass`__
+Type: `String`
+Optional, a string for the full path (including namespaces) to a class where you can have more function based class.
+
+example:
+
+```php
+return [
+    ...
+    'configClass' => 'App\\MyConfigs\\MoesifConfigClass',
+    ...
+];
+```
+
+Where your class would be something like this:
+
+
+```php
+namespace App\Http\Middleware;
+
+class MoesifConfigClass
+{
+    public function maskRequestHeaders($headers) {
+      $headers['header5'] = '';
+      return $headers;
+    }
+
+    public function maskRequestBody($body) {
+      return $body;
+    }
+
+    public function maskResponseHeaders($headers) {
+      $headers['header2'] = 'adding rather the removing, but should work the same.';
+      return $headers;
+    }
+
+    public function maskResponseBody($body) {
+      return $body;
+    }
+
+    public function identifyUserId($request, $response) {
+      if (is_null($request->user())) {
+        return null;
+      } else {
+        $user = $request->user();
+        return $user['id'];
+      }
+    }
+
+    public function identifyCompanyId($request, $response) {
+      return "newCompanyId1234";
+    }
+
+    public function identifySessionId($request, $response) {
+      if ($request->hasSession()) {
+        return $request->session()->getId();
+      } else {
+        return null;
+      }
+    }
+
+    public function getMetadata($request, $response) {
+      return array("foo"=>"laravel example", "boo"=>"custom data here you are here.");
+    }
+
+    public function skip($request, $response) {
+      $myurl = $request->fullUrl();
+      if (strpos($myurl, 'shouldskip') !== false) {
+        return true;
+      }
+      return false;
+    }
+}
+```
+
+The following methods on this class can be specified.
+
 #### __`identifyUserId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for userId. Moesif automatically obtains end userId via $request->user()['id'], In case you use a non standard way of injecting user into $request or want to override userId, you can do so with identifyUserId.
 
-```php
-
-// In config/moesif.php
-
-$identifyUserId = function($request, $response) {
-    // Your custom code that returns a user id string
-    $user = $request->user();
-    if ($request->user()) {
-        return $user->id;
-    }
-    return NULL;
-};
-```
-
-```php
-return [
-  //
-  'identifyUserId' => $identifyUserId
-];
-```
 
 #### __`identifyCompanyId`__
 Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and return a string for companyId.
 
-```php
-
-// In config/moesif.php
-
-$identifyCompanyId = function($request, $response) {
-    # Your custom code that returns a company id string
-    return '67890';
-};
-```
-
-```php
-return [
-  //
-  'identifyCompanyId' => $identifyCompanyId
-];
-```
 
 #### __`identifySessionId`__
 Type: `($request, $response) => String`
@@ -169,64 +224,15 @@ Optional, a function that takes a $request and $response and return a string for
 Type: `($request, $response) => Associative Array`
 Optional, a function that takes a $request and $response and returns $metdata which is an associative array representation of JSON.
 
-```php
-
-// In config/moesif.php
-
-$getMetadata = function($request, $response) {
-  return array("foo"=>"laravel example", "boo"=>"custom data");
-};
-
-return [
-  //
-  'getMetadata' => $getMetadata
-];
-
-```
-
-#### __`apiVersion`__
-Type: `String`
-Optional, a string to specifiy an API Version such as 1.0.1, allowing easier filters.
-
 #### __`maskRequestHeaders`__
 Type: `$headers => $headers`
 Optional, a function that takes a $headers, which is an associative array, and
 returns an associative array with your sensitive headers removed/masked.
 
-```php
-// In config/moesif.php
-
-$maskRequestHeaders = function($headers) {
-    $headers['password'] = '****';
-    return $headers;
-};
-
-return [
-  //
-  'maskRequestHeaders' => $maskRequestHeaders
-];
-```
-
 #### __`maskRequestBody`__
 Type: `$body => $body`
 Optional, a function that takes a $body, which is an associative array representation of JSON, and
 returns an associative array with any information removed.
-
-```php
-
-// In config/moesif.php
-
-$maskRequestBody = function($body) {
-    // remove any sensitive information.
-    $body['password'] = '****';
-    return $body;
-};
-
-return [
-  //
-  'maskRequestBody' => $maskRequestBody
-];
-```
 
 #### __`maskResponseHeaders`__
 Type: `$headers => $headers`
@@ -241,13 +247,6 @@ Type: `($request, $response) => String`
 Optional, a function that takes a $request and $response and returns true if
 this API call should be not be sent to Moesif.
 
-#### __`debug`__
-Type: `Boolean`
-Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
-
-#### __`logBody`__
-Type: `Boolean`
-Optional, Default true, Set to false to remove logging request and response body to Moesif.
 
 ## Update a Single User
 
@@ -469,3 +468,61 @@ To view more documentation on integration options, please visit __[the Integrati
 [link-downloads]: https://packagist.org/packages/moesif/moesif-laravel
 [link-license]: https://raw.githubusercontent.com/Moesif/moesif-laravel/master/LICENSE
 [link-source]: https://github.com/moesif/moesif-laravel
+
+## Migration Guide from Version 1.X.X
+
+Because `config:cache` do not allow closures in config files ([See issue on github](https://github.com/laravel/framework/issues/24103)). Therefore, in V2.X.X. we switched to class based configuration. To migrate, if you have closure based config do below:
+
+
+For example, if you had these previously:
+
+```php
+$identifyUserId = function($request, $response) {
+    // Your custom code that returns a user id string
+    $user = $request->user();
+    if ($request->user()) {
+        return $user->id;
+    }
+    return NULL;
+};
+
+return [
+  ...,
+  'identifyUserId' => $identifyUserId,
+]
+
+```
+
+In V2.X.X, you would do this.
+
+
+- Create a new class like this:
+
+```php
+namespace Any\NameSpace;
+
+class MoesifConfig
+{
+    public function identifyUserId($request, $response) {
+      if (is_null($request->user())) {
+        return null;
+      } else {
+        $user = $request->user();
+        return $user['id'];
+      }
+    }
+
+    // add other methods for closure based configs.
+}
+```
+
+- In your `moesif.php` in the config folder:
+
+```php
+
+return [
+  ...,
+  'configClass' => 'Any\\Namespace\\MoesifConfig',
+]
+
+```
