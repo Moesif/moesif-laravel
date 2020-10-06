@@ -8,12 +8,12 @@
 
 [Source Code on GitHub](https://github.com/moesif/moesif-laravel)
 
-Middleware for PHP Laravel (> 5.1) to automatically log API Calls and 
+Middleware for PHP Laravel (> 5.1) to automatically log API Calls and
 sends to [Moesif](https://www.moesif.com) for API analytics and log analysis
 
 ### Laravel 4.2
   A [Moesif SDK](https://github.com/Moesif/moesif-laravel4.2) is available for Laravel 4.2. Credit for creating this goes to [jonnypickett](https://github.com/jonnypickett/).
-  
+
 ## How to install
 
 Via Composer
@@ -99,9 +99,9 @@ return [
 ```
 
 Your Moesif Application Id can be found in the [_Moesif Portal_](https://www.moesif.com/).
-After signing up for a Moesif account, your Moesif Application Id will be displayed during the onboarding steps. 
+After signing up for a Moesif account, your Moesif Application Id will be displayed during the onboarding steps.
 
-You can always find your Moesif Application Id at any time by logging 
+You can always find your Moesif Application Id at any time by logging
 into the [_Moesif Portal_](https://www.moesif.com/), click on the top right menu,
 and then clicking _Installation_.
 
@@ -293,7 +293,7 @@ The `metadata` field can be any custom data you want to set on the user. The `us
 
 ## Update Users in Batch
 
-Similar to updateUser, but used to update a list of users in one batch. 
+Similar to updateUser, but used to update a list of users in one batch.
 Only the `user_id` field is required.
 
 ```php
@@ -368,7 +368,7 @@ use Moesif\Middleware\MoesifLaravel;
 // metadata can be any custom object
 $company = array(
     "company_id" => "67890",
-    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info 
+    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info
     "campaign" => array(
         "utm_source" => "google",
         "utm_medium" => "cpc",
@@ -396,7 +396,7 @@ The `metadata` field can be any custom data you want to set on the company. The 
 
 ## Update Companies in Batch
 
-Similar to update_company, but used to update a list of companies in one batch. 
+Similar to update_company, but used to update a list of companies in one batch.
 Only the `company_id` field is required.
 
 ```php
@@ -404,7 +404,7 @@ use Moesif\Middleware\MoesifLaravel;
 
 $companyA = array(
     "company_id" => "67890",
-    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info 
+    "company_domain" => "acmeinc.com", // If domain is set, Moesif will enrich your profiles with publicly available info
     "campaign" => array(
         "utm_source" => "google",
         "utm_medium" => "cpc",
