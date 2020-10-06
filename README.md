@@ -11,7 +11,7 @@
 Middleware for PHP Laravel (> 5.1) to automatically log API Calls and
 sends to [Moesif](https://www.moesif.com) for API analytics and log analysis
 
-__Moesif-Laravel V2.X.X have breaking changes from V1.X.X. Please see migration guide below for instructions for migrating from V1.0 to V2.0__
+__Moesif-Laravel V2.X.X updated to stop using Closure based configs. This is a breaking changes from V1.X.X. Please see migration guide below for instructions for migrating from V1.0 to V2.0__
 
 ### Laravel 4.2
   A [Moesif SDK](https://github.com/Moesif/moesif-laravel4.2) is available for Laravel 4.2. Credit for creating this goes to [jonnypickett](https://github.com/jonnypickett/).
