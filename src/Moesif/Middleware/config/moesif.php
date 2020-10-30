@@ -1,12 +1,12 @@
 <?php
 
 /*
-This config file is used during boot. merely serve as an example/template that
-you can put into your config folder of your laravel project.
+This config file is used during boot and is an example config
+to be placed into your Laravel project's config directory.
 */
 
 return [
-    'applicationId' => 'your application id',
+    'applicationId' => 'Your Moesif Application Id',
     'logBody' => true,
     'debug' => false
 ];
