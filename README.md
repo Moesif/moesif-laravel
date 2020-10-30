@@ -58,7 +58,8 @@ protected $middleware = [
 
 ```
 
-If API under specific route group, add to your route group:
+If you only want to add tracking for APIs under specific route group, add to your route group, but be sure to remove from the global
+middleware stack from above global list.
 
 ```php
 // In App/Http/Kernel.php
@@ -109,7 +110,7 @@ For other configuration options, see below.
 
 ## Configuration options
 
-__To support Laravel [configuration caching](https://laravel.com/docs/8.x/configuration#configuration-caching), some configuration options have moved into a separate config class for v2. 
+__To support Laravel [configuration caching](https://laravel.com/docs/8.x/configuration#configuration-caching), some configuration options have moved into a separate config class for v2.
 See [Migration Guide v1.x.x to v2.x.x](#migration-guide-v1xx-to-v2xx)__
 
 You can define Moesif configuration options in the `config/moesif.php` file.
@@ -453,6 +454,10 @@ Make sure you install PHP with the JSON Extension enabled [More Info](https://st
 ## An Example Laravel App with Moesif Integrated
 
 [Moesif Laravel Example](https://github.com/Moesif/moesif-laravel-example)
+
+## Be sure to update cache after changing config:
+
+If you enabled config cache, after you update the configuration, please be sure to run `php artisan config:cache` again to ensure configuration is updated.
 
 ## Other integrations
 
