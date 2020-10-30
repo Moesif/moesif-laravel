@@ -255,7 +255,9 @@ class MoesifLaravel
 
         // Add Transaction Id to the request headers
         if (!$disableTransactionId) {
-            if (!is_null((string) $request->headers->get('X-Moesif-Transaction-Id') ?? null)) {
+            $tmpId = (string) $request->headers->get('X-Moesif-Transaction-Id');
+
+            if (!is_null(isset($tmpId) ? $tmpId : null)) {
                 $reqTransId = (string) $request->headers->get('X-Moesif-Transaction-Id');
                 if (!is_null($reqTransId)) {
                     $transactionId = $reqTransId;
@@ -310,7 +312,6 @@ class MoesifLaravel
             'time' => $endDateTime->format('Y-m-d\TH:i:s.uP'),
             'status' => $response->getStatusCode()
         ];
-
 
         $responseContent = $response->getContent();
         if ($logBody && !is_null($responseContent)) {
