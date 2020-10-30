@@ -455,11 +455,9 @@ Make sure you install PHP with the JSON Extension enabled [More Info](https://st
 
 [Moesif Laravel Example](https://github.com/Moesif/moesif-laravel-example)
 
-### Laravel config cache
+## Be sure to update cache after changing config:
 
-If you have trouble with `php artisan config:cache` in v1.x.x. please upgrade to new class based configuration scheme in v2.x.x.
-
-Also, if you enabled config cache, after you update the configuration, please be sure to run `php artisan config:cache` again to ensure configuration is updated.
+If you enabled config cache, after you update the configuration, please be sure to run `php artisan config:cache` again to ensure configuration is updated.
 
 ## Other integrations
 
