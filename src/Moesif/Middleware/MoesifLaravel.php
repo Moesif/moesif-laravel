@@ -179,6 +179,16 @@ class MoesifLaravel
 
         $configClass = config('moesif.configClass');
 
+        $maskRequestHeaders = null;
+        $maskRequestBody = null;
+        $maskResponseHeaders = null;
+        $maskResponseBody = null;
+        $identifyUserId = null;
+        $identifyCompanyId = null;
+        $identifySessionId = null;
+        $getMetadata = null;
+        $skip = null;
+
         if ($configClass) {
            if (!class_exists($configClass)) {
              throw new Exception('The config class '.$configClass.' not found. Please be sure to specify full name space path.');
