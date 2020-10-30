@@ -224,7 +224,7 @@ class MoesifLaravel
         }
 
         // if skip is defined, invoke skip function.
-        if (!is_null($skip)) {
+        if (is_callable($skip)) {
           if($skip($request, $response)) {
             if ($debug) {
               Log::info('[Moesif] : skip function returned true, so skipping this event.');
@@ -275,7 +275,7 @@ class MoesifLaravel
 
         // can't use headers->all() because it is an array of arrays.
         // $request->headers->all();
-        if(!is_null($maskRequestHeaders)) {
+        if(is_callable($maskRequestHeaders)) {
             $requestData['headers'] = $maskRequestHeaders($requestHeaders);
         } else {
             $requestData['headers'] = $requestHeaders;
@@ -293,7 +293,7 @@ class MoesifLaravel
               $requestData['body'] = base64_encode($requestContent);
               $requestData['transfer_encoding'] = 'base64';
             } else {
-                if (!is_null($maskRequestBody)) {
+                if (is_callable($maskRequestBody)) {
                     $requestData['body'] = $maskRequestBody($requestBody);
                 } else {
                     $requestData['body'] = $requestBody;
@@ -323,7 +323,7 @@ class MoesifLaravel
             $responseData['body'] = base64_encode($responseContent);
             $responseData['transfer_encoding'] = 'base64';
           } else {
-            if (!is_null($maskResponseBody)) {
+            if (is_callable($maskResponseBody)) {
                 $responseData['body'] = $maskResponseBody($jsonBody);
             } else {
                 $responseData['body'] = $jsonBody;
@@ -342,7 +342,7 @@ class MoesifLaravel
             $responseHeaders['X-Moesif-Transaction-Id'] = $transactionId;
         }
 
-        if(!is_null($maskResponseHeaders)) {
+        if(is_callable($maskResponseHeaders)) {
             $responseData['headers'] = $maskResponseHeaders($responseHeaders);
         } else {
             $responseData['headers'] = $responseHeaders;
@@ -355,24 +355,24 @@ class MoesifLaravel
 
         $user = $request->user();
 
-        if (!is_null($identifyUserId)) {
+        if (is_callable($identifyUserId)) {
             $data['user_id'] = $this->ensureString($identifyUserId($request, $response));
         } else if (!is_null($user)) {
             $data['user_id'] = $this->ensureString($user['id']);
         }
 
         // CompanyId
-        if(!is_null($identifyCompanyId)) {
+        if(is_callable($identifyCompanyId)) {
             $data['company_id'] = $this->ensureString($identifyCompanyId($request, $response));
         }
 
-        if (!is_null($identifySessionId)) {
+        if (is_callable($identifySessionId)) {
             $data['session_token'] = $this->ensureString($identifySessionId($request, $response));
         } else if ($request->hasSession()) {
             $data['session_token'] = $this->ensureString($request->session()->getId());
         }
 
-        if (!is_null($getMetadata)) {
+        if (is_callable($getMetadata)) {
           $data['metadata'] = $getMetadata($request, $response);
         }
 
