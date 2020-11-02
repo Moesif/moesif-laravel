@@ -56,16 +56,16 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         if ($this->_fork == true) {
             $exists = function_exists('exec');
             if (!$exists) {
-                throw new Exception('The "exec" function must exist to use the cURL consumer in "fork" mode. Try setting fork = false or use another consumer.');
+                throw new Exception('exec() must exist to log API calls via a forked process. Either enable exec() in your PHP environment (recommended) or disable forking by setting \'disableForking\' => true to your moesif.php. See https://www.moesif.com/docs/server-integration/laravel/#troubleshooting');
             }
             $disabled = explode(', ', ini_get('disable_functions'));
             $enabled = !in_array('exec', $disabled);
             if (!$enabled) {
-                throw new Exception('The "exec" function must be enabled to use the cURL consumer in "fork" mode. Try setting fork = false or use another consumer.');
+                throw new Exception('exec() must be enabled to log API calls via a forked process. Either enable exec() in your PHP environment (recommended) or disable forking by setting \'disableForking\' => true to your moesif.php. See https://www.moesif.com/docs/server-integration/laravel/#troubleshooting');
             }
         } else {
             if (!function_exists('curl_init')) {
-                throw new Exception('The cURL PHP extension is required to use the cURL consumer with fork = false. Try setting fork = true or use another consumer.');
+                throw new Exception('The PHP cURL extension is required when disableForking is true in your moesif.php. Either allow forking or ensure the cURL extension exists. See https://www.moesif.com/docs/server-integration/laravel/#troubleshooting');
             }
         }
     }

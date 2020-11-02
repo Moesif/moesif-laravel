@@ -119,6 +119,10 @@ You can define Moesif configuration options in the `config/moesif.php` file.
 Type: `String`
 Required, a string that identifies your application.
 
+#### __`disableForking`__
+Type: `Boolean`
+Optional, If true, this will disable forking. For the best performance, the SDK forks a process to send events by default. However, this requires your PHP environment to not have `exec` disabled via `disable_functions`. 
+
 #### __`debug`__
 Type: `Boolean`
 Optional, If true, will print debug messages using Illuminate\Support\Facades\Log
@@ -444,8 +448,41 @@ In case you've exec() as a disabled function, you could set configuration option
 
 ## Troubleshooting
 
-### The PHP Extension is Required
+### exec() must exist/exec() must be enabled
+By default, Moesif forks a process to log API calls in an asynchronous method, which requires your PHP environment to have exec() enabled. For highest performance, the recommended fix is to ensure exec() is enabled for your hosting environment:
+
+- [Instructions for DigitalOcean](https://www.digitalocean.com/community/questions/why-is-php-exec-not-working-on-digitalocean) 
+- [Instructions for Namecheap](https://www.namecheap.com/support/knowledgebase/article.aspx/9396/2219/how-to-enable-exec)
+
+If you cannot enable exec (such as for shared hosting environments), you can disable forking by adding the following to your `moesif.php`. 
+
+```php
+return [
+    'applicationId' => 'Your Moesif Application Id',
+    'disableForking' => true,
+];
+```
+
+### The PHP JSON extension is required.
 Make sure you install PHP with the JSON Extension enabled [More Info](https://stackoverflow.com/questions/7318191/enable-json-encode-in-php).
+
+### The PHP cURL extension is required
+This error happens when you disabled forking and you do not have the cURL PHP extension enabled. The recommended fix is to enable forking by setting `disableForking` to false in your `moesif.php`. Otherwise, ensure you have enabled the PHP CURL extension. [More info](https://www.php.net/manual/en/curl.installation.php).
+
+### No events show up in Moesif
+Because Moesif forks a process, you may not see all errors from the child process. A common case for event not showing up is due to an incorrect application id.
+To see debug logs, you can add the following to your `moesif.php`:
+
+```php
+
+// In config/moesif.php
+
+return [
+    //
+    'applicationId' => 'Your Moesif Application Id',
+    'debug' => true,
+];
+```
 
 ## Test Laravel App with Moesif Integrated
 
