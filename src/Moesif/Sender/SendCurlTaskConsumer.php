@@ -169,7 +169,6 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->_connect_timeout);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->_timeout);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         $response = curl_exec($ch);
