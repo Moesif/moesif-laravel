@@ -374,7 +374,12 @@ class MoesifLaravel
         }
 
         if (is_callable($getMetadata)) {
-          $data['metadata'] = $getMetadata($request, $response);
+            $metadata = $getMetadata($request, $response);
+            if (empty($metadata)) {
+                $data['metadata'] = null;
+            } else {
+                $data['metadata'] = $metadata;
+            }
         }
 
         $moesifApi = MoesifApi::getInstance($applicationId, ['fork'=>!$disableForking, 'debug'=>$debug]);
