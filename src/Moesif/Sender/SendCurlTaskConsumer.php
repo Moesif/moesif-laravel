@@ -201,6 +201,9 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
             $this->_log("Making forked cURL call to $url");
         }
 
+    // https://www.php.net/manual/en/function.escapeshellarg.php
+    $data = escapeshellarg($data);
+
 		if(strcasecmp(substr(PHP_OS, 0, 3), 'WIN') == 0) {
 			$exec = ' echo ' . $data . ' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/2.0.6" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
