@@ -19,6 +19,12 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
      */
     protected $_users_endpoint;
 
+    protected $_users_batch_endpoint;
+
+    protected $_company_endpoint;
+
+    protected $_companies_batch_endpoint;
+
     /**
      * @var int connect_timeout The number of seconds to wait while trying to connect. Default is 5 seconds.
      */
@@ -202,16 +208,16 @@ class SendCurlTaskConsumer extends SendTaskConsumer {
         }
 
     // https://www.php.net/manual/en/function.escapeshellarg.php
-    $data = escapeshellarg($data);
+    $escapedData = escapeshellarg($data);
 
 		if(strcasecmp(substr(PHP_OS, 0, 3), 'WIN') == 0) {
-			$exec = ' echo ' . $data . ' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/2.0.6" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
+			$exec = ' echo ' . $escapedData . ' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/2.0.6" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
 			if(!$this->_debug()) {
 				$exec .= " > NUL";
 			}
 		} else {
-			$exec = ' echo \'' . $data . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/2.0.6" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
+			$exec = ' echo \'' . $escapedData . '\' '.' | '.'curl -v -X POST -H "Content-Type: application/json" -H "User-Agent: moesif-laravel/2.0.6" -H "X-Moesif-Application-Id: ' . $applicationId .'" -d @- "' . $url . '"';
 
 			if(!$this->_debug()) {
 				$exec .= " >/dev/null 2>&1 &";
